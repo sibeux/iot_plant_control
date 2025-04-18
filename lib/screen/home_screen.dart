@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:iot_plant_control/controller/clock_controller.dart';
 import 'package:iot_plant_control/controller/image_slide_controller.dart';
+import 'package:iot_plant_control/controller/mqtt/mqtt_controller.dart';
 import 'package:iot_plant_control/widgets/box_monitor.dart';
 import 'package:iot_plant_control/widgets/tds_control_slide.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -26,6 +27,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final imageSlideController = Get.put(ImageSlideController());
     final clockController = Get.put(ClockController());
+    final mqttController = Get.put(MqttController());
     // Set the locale to Indonesia
     var now = DateTime.now();
     var formatter = DateFormat(
@@ -45,7 +47,7 @@ class HomeScreen extends StatelessWidget {
               Stack(
                 children: [
                   Container(
-                    height: 250.h,
+                    height: 220.h,
                     clipBehavior: Clip.antiAlias,
                     decoration: BoxDecoration(
                       color: Colors.red.withAlpha(100),
@@ -66,7 +68,7 @@ class HomeScreen extends StatelessWidget {
                           // 'assets/img/plant/${index + 1}.png',
                           fit: BoxFit.cover,
                           width: double.infinity,
-                          height: 250.h,
+                          height: 220.h,
                           filterQuality: FilterQuality.high,
                         );
                       },
@@ -153,7 +155,7 @@ class HomeScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20.r),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withAlpha(20),
+                        color: Colors.black.withAlpha(30),
                         blurRadius: 3.r,
                         offset: Offset(0, 1.h),
                       ),
@@ -200,22 +202,27 @@ class HomeScreen extends StatelessWidget {
                             Flexible(
                               fit: FlexFit.tight,
                               flex: 1,
-                              child: BoxMonitor(
-                                id: 1,
-                                title: 'pH',
-                                status: 'Good',
-                                value: '51%',
+                              child: Obx(
+                                () => BoxMonitor(
+                                  id: 1,
+                                  title: 'pH',
+                                  status: 'Good',
+                                  value: '${mqttController.phValue.value}%',
+                                ),
                               ),
                             ),
                             SizedBox(width: 20.w),
                             Flexible(
                               fit: FlexFit.tight,
                               flex: 1,
-                              child: BoxMonitor(
-                                id: 2,
-                                title: 'Temperature',
-                                status: 'Good',
-                                value: '12°',
+                              child: Obx(
+                                () => BoxMonitor(
+                                  id: 2,
+                                  title: 'Temperature',
+                                  status: 'Good',
+                                  value:
+                                      '${mqttController.temperatureValue.value}°',
+                                ),
                               ),
                             ),
                           ],

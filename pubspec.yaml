@@ -40,6 +40,7 @@ dependencies:
   hexcolor: ^3.0.1
   intl: ^0.20.2
   flutter_svg: ^2.1.0
+  mqtt_client: ^10.8.0
 
 dev_dependencies:
   flutter_test:
