@@ -53,7 +53,7 @@ class MqttController extends GetxController {
         if (kDebugMode) {
           print('📥 Received on $topic: $payload. From Sensor!');
         }
-        // ph:12,temp:32
+        // contoh payload: ph:12,temp:32
         final parts = payload.split(',');
         Map<String, String> data = {};
 
