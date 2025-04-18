@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:iot_plant_control/screen/home_screen/home_screen.dart';
+import 'package:iot_plant_control/screen/home_screen.dart';
 
 void main() {
   // Dibutuhkan setpreferredOrientations.

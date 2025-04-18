@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:iot_plant_control/controller/clock_controller.dart';
 import 'package:iot_plant_control/controller/image_slide_controller.dart';
+import 'package:iot_plant_control/widgets/box_monitor.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:intl/intl.dart';
 
@@ -145,7 +146,6 @@ class HomeScreen extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w),
                 child: Container(
-                  height: 100.h,
                   width: double.infinity,
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -187,6 +187,34 @@ class HomeScreen extends StatelessWidget {
                                   fontWeight: FontWeight.w600,
                                   color: Colors.black.withAlpha(200),
                                 ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 10.h),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                              fit: FlexFit.tight,
+                              flex: 1,
+                              child: BoxMonitor(
+                                id: 1,
+                                title: 'pH',
+                                status: 'Good',
+                                value: '51%',
+                              ),
+                            ),
+                            SizedBox(width: 20.w),
+                            Flexible(
+                              fit: FlexFit.tight,
+                              flex: 1,
+                              child: BoxMonitor(
+                                id: 2,
+                                title: 'Temperature',
+                                status: 'Good',
+                                value: '12°',
                               ),
                             ),
                           ],
