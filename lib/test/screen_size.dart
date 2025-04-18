@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ScreenSizePage extends StatelessWidget {
   const ScreenSizePage({super.key});
@@ -7,7 +9,9 @@ class ScreenSizePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    print('Lebar: ${size.width}, Tinggi: ${size.height}');
+    if (kDebugMode) {
+      print('Lebar: ${size.width}, Tinggi: ${size.height}');
+    }
 
     return Scaffold(
       appBar: AppBar(title: Text('Ukuran Layar')),
@@ -15,7 +19,7 @@ class ScreenSizePage extends StatelessWidget {
         child: Text(
           'Lebar: ${size.width.toStringAsFixed(2)}\n'
           'Tinggi: ${size.height.toStringAsFixed(2)}',
-          style: TextStyle(fontSize: 18),
+          style: TextStyle(fontSize: 18.sp),
           textAlign: TextAlign.center,
         ),
       ),
