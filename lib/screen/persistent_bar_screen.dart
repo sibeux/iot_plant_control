@@ -16,9 +16,18 @@ class PersistentBarScreen extends StatelessWidget {
       controller: persistentBarController.controller,
       screens: persistentBarController.buildScreens(),
       items: persistentBarController.navBarsItems(),
+      animationSettings: NavBarAnimationSettings(
+        screenTransitionAnimation: ScreenTransitionAnimationSettings(
+          screenTransitionAnimationType: ScreenTransitionAnimationType.slide,
+          animateTabTransition: true,
+          curve: Curves.easeInOut,
+          duration: Duration(milliseconds: 200),
+        ),
+      ),
       onItemSelected: (index) {
         persistentBarController.lastSelectedIndex = index;
       },
+
       backgroundColor: Colors.white,
       handleAndroidBackButtonPress: false, // Mengatur tombol back di Android
       resizeToAvoidBottomInset: true,
