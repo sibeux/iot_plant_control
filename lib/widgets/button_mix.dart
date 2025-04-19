@@ -15,7 +15,7 @@ class ButtonMix extends StatelessWidget {
     return ElevatedButton(
       onPressed: () {
         mqttController.publishTDS(
-          'TDS: ${tdsController.tdsValue.value.toStringAsFixed(1)}',
+          'TDS: ${tdsController.tdsValue.value.toStringAsFixed(0)}',
         );
       },
       style: ElevatedButton.styleFrom(
@@ -26,7 +26,7 @@ class ButtonMix extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.r),
         ),
-        minimumSize: Size(150.w, 40.sp),
+        minimumSize: Size(150.w, 40.h),
       ),
       child: Text(
         'Mix TDS',

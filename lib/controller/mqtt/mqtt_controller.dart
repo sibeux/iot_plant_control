@@ -51,7 +51,7 @@ class MqttController extends GetxController {
 
       if (!payload.contains('TDS:')) {
         if (kDebugMode) {
-          print('📥 Received on $topic: $payload. From Sensor!');
+          print('📥 Received on $topic: $payload From Sensor!');
         }
         // contoh payload: ph:12,temp:32
         final parts = payload.split(',');
@@ -67,7 +67,7 @@ class MqttController extends GetxController {
         temperatureValue.value = int.parse(data['temp'] ?? '0');
       } else {
         if (kDebugMode) {
-          print('📥 Received on $topic: $payload. From Flutter!');
+          print('📥 Received on $topic: $payload From Flutter!');
         }
       }
     });

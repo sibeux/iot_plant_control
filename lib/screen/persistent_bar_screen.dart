@@ -21,7 +21,7 @@ class PersistentBarScreen extends StatelessWidget {
           screenTransitionAnimationType: ScreenTransitionAnimationType.slide,
           animateTabTransition: true,
           curve: Curves.easeInOut,
-          duration: Duration(milliseconds: 200),
+          duration: Duration(milliseconds: 300),
         ),
       ),
       onItemSelected: (index) {
