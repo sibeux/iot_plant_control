@@ -76,8 +76,8 @@ class HomeScreen extends StatelessWidget {
                   ),
                   Positioned(
                     bottom: 10.h,
-                    left: 0,
-                    right: 0,
+                    left: 0.w,
+                    right: 0.w,
                     child: Center(
                       child: SmoothPageIndicator(
                         controller: imageSlideController.pageController.value,
@@ -207,7 +207,40 @@ class HomeScreen extends StatelessWidget {
                                   id: 1,
                                   title: 'pH',
                                   status: 'Good',
-                                  value: '${mqttController.phValue.value}%',
+                                  value: '${mqttController.phValue.value}',
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 20.w),
+                            Flexible(
+                              fit: FlexFit.tight,
+                              flex: 1,
+                              child: Obx(
+                                () => BoxMonitor(
+                                  id: 2,
+                                  title: 'Temperature',
+                                  status: 'Good',
+                                  value:
+                                      '${mqttController.temperatureValue.value}°',
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 15.h),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                              fit: FlexFit.tight,
+                              flex: 1,
+                              child: Obx(
+                                () => BoxMonitor(
+                                  id: 1,
+                                  title: 'PPM',
+                                  status: 'Good',
+                                  value: '${mqttController.phValue.value}',
                                 ),
                               ),
                             ),
@@ -228,9 +261,7 @@ class HomeScreen extends StatelessWidget {
                           ],
                         ),
                         SizedBox(height: 25.h),
-                        TdsControlSlide(type: 'min'),
-                        SizedBox(height: 15.h),
-                        TdsControlSlide(type: 'max'),
+                        TdsControlSlide(type: ''),
                       ],
                     ),
                   ),

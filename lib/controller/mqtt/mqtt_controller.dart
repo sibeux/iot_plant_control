@@ -17,7 +17,7 @@ class MqttController extends GetxController {
 
   Future<void> connectToBroker() async {
     client = MqttServerClient(
-      'broker.hivemq.com',
+      'broker.emqx.io',
       'flutter_client_${DateTime.now().millisecondsSinceEpoch}',
     );
     client.port = 1883;

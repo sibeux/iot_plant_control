@@ -70,7 +70,7 @@ class BoxMonitor extends StatelessWidget {
               child: Text(
                 value,
                 style: TextStyle(
-                  fontSize: 40.sp,
+                  fontSize: 45.sp,
                   fontWeight: FontWeight.bold,
                   color: Colors.white, // Harus white.
                 ),

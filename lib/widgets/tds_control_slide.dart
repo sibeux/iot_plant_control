@@ -18,7 +18,7 @@ class TdsControlSlide extends StatelessWidget {
         Container(
           alignment: Alignment.centerLeft,
           child: Text(
-            'TDS ${type.capitalizeFirst}',
+            'Total Disolved Solids ${type.capitalizeFirst}',
             style: TextStyle(
               fontSize: 14.sp,
               fontWeight: FontWeight.w600,
@@ -41,7 +41,9 @@ class TdsControlSlide extends StatelessWidget {
                     activeColor: Color.fromARGB(255, 255, 163, 189),
                     thumbColor: HexColor('#f3516d'),
                     inactiveColor: Colors.grey.withAlpha(100),
-                    max: 12,
+                    min: 500,
+                    max: 1500,
+                    divisions: 10,
                     value:
                         type == 'min'
                             ? tdsController.minTdsValue.value
@@ -59,7 +61,7 @@ class TdsControlSlide extends StatelessWidget {
             ),
             SizedBox(width: 10.w),
             Container(
-              width: 50.w,
+              width: 60.w,
               padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
               alignment: Alignment.center,
               decoration: BoxDecoration(
@@ -69,8 +71,8 @@ class TdsControlSlide extends StatelessWidget {
               child: Obx(
                 () => Text(
                   type == 'min'
-                      ? tdsController.minTdsValue.value.toStringAsFixed(1)
-                      : tdsController.maxTdsValue.value.toStringAsFixed(1),
+                      ? tdsController.minTdsValue.value.toStringAsFixed(0)
+                      : tdsController.maxTdsValue.value.toStringAsFixed(0),
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w600,
