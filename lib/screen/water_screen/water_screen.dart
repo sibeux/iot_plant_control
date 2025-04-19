@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:iot_plant_control/controller/water_controller.dart';
+import 'package:iot_plant_control/screen/water_screen/add_water_screen.dart';
 import 'package:iot_plant_control/widgets/water_widget/water_tile.dart';
 
 class WaterScreen extends StatelessWidget {
@@ -27,9 +27,12 @@ class WaterScreen extends StatelessWidget {
                 itemCount: waterController.waterTime.length,
                 itemBuilder: (context, index) {
                   final water = waterController.waterTime[index];
-                  return WaterTile(
-                    waterTime: water,
-                    // onDelete: () => waterController.removeWatering(index),
+                  return Container(
+                    margin: EdgeInsets.only(bottom: 15.h),
+                    child: WaterTile(
+                      waterTime: water,
+                      // onDelete: () => waterController.removeWatering(index),
+                    ),
                   );
                 },
               ),
@@ -45,10 +48,19 @@ class WaterScreen extends StatelessWidget {
                 width: 60.sp,
                 height: 60.sp,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Get.to(
+                      () => const AddWaterScreen(),
+                      transition: Transition.rightToLeft,
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                      fullscreenDialog: true,
+                      popGesture: false,
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
-                    backgroundColor: HexColor('#e95263'),
+                    backgroundColor: Color.fromARGB(255, 69, 214, 149),
                     elevation: 0,
                     splashFactory: InkRipple.splashFactory,
                     shape: RoundedRectangleBorder(

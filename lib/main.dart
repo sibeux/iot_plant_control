@@ -9,6 +9,17 @@ void main() {
   // Dibutuhkan setpreferredOrientations.
   WidgetsFlutterBinding.ensureInitialized();
 
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle(
+      statusBarColor:
+          Colors.transparent, // Biar transparan atau bisa diganti warna lain
+      statusBarIconBrightness:
+          Brightness.dark, // <- ini yang bikin ikon jadi hitam
+      statusBarBrightness:
+          Brightness.light, // iOS only, tetap disarankan ditambahkan
+    ),
+  );
+
   // Mengunci orientasi ke portrait
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
