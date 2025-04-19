@@ -22,7 +22,9 @@ class BoxMonitor extends StatelessWidget {
           colors:
               id == 1
                   ? [HexColor("#ebfae5"), HexColor("#e3f6f4")]
-                  : [HexColor("#e2fafd"), HexColor("#dfe6ff")],
+                  : id == 2
+                  ? [HexColor("#e2fafd"), HexColor("#dfe6ff")]
+                  : [HexColor("#fce0e3"), HexColor("#f8bbd0")],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -61,7 +63,9 @@ class BoxMonitor extends StatelessWidget {
                     colors:
                         id == 1
                             ? [HexColor('#80d756'), HexColor('#4fc09c')]
-                            : [HexColor('#2ad4f8'), HexColor('#37c1e7')],
+                            : id == 2
+                            ? [HexColor('#2ad4f8'), HexColor('#37c1e7')]
+                            : [HexColor('#f3516d'), HexColor('#f3516d')],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ).createShader(

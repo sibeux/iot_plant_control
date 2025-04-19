@@ -237,7 +237,7 @@ class HomeScreen extends StatelessWidget {
                               flex: 1,
                               child: Obx(
                                 () => BoxMonitor(
-                                  id: 1,
+                                  id: 3,
                                   title: 'PPM',
                                   status: 'Good',
                                   value: '${mqttController.phValue.value}',
