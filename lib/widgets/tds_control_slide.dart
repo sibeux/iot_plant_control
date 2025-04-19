@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:iot_plant_control/controller/tds_controller.dart';
+import 'package:iot_plant_control/widgets/button_mix.dart';
 
 class TdsControlSlide extends StatelessWidget {
   const TdsControlSlide({super.key, required this.type});
@@ -18,7 +19,7 @@ class TdsControlSlide extends StatelessWidget {
         Container(
           alignment: Alignment.centerLeft,
           child: Text(
-            'Total Disolved Solids ${type.capitalizeFirst}',
+            'Total Dissolved Solids ${type.capitalizeFirst}',
             style: TextStyle(
               fontSize: 14.sp,
               fontWeight: FontWeight.w600,
@@ -44,16 +45,9 @@ class TdsControlSlide extends StatelessWidget {
                     min: 500,
                     max: 1500,
                     divisions: 10,
-                    value:
-                        type == 'min'
-                            ? tdsController.minTdsValue.value
-                            : tdsController.maxTdsValue.value,
+                    value: tdsController.tdsValue.value,
                     onChanged: (value) {
-                      if (type == 'min') {
-                        tdsController.setMinTdsValue(value);
-                      } else {
-                        tdsController.setMaxTdsValue(value);
-                      }
+                      tdsController.setTdsValue(value);
                     },
                   ),
                 ),
@@ -70,9 +64,7 @@ class TdsControlSlide extends StatelessWidget {
               ),
               child: Obx(
                 () => Text(
-                  type == 'min'
-                      ? tdsController.minTdsValue.value.toStringAsFixed(0)
-                      : tdsController.maxTdsValue.value.toStringAsFixed(0),
+                  tdsController.tdsValue.value.toStringAsFixed(0),
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w600,
@@ -83,6 +75,8 @@ class TdsControlSlide extends StatelessWidget {
             ),
           ],
         ),
+        SizedBox(height: 10.h),
+        Center(child: ButtonMix()),
       ],
     );
   }

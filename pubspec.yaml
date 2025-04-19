@@ -41,6 +41,7 @@ dependencies:
   intl: ^0.20.2
   flutter_svg: ^2.1.0
   mqtt_client: ^10.8.0
+  persistent_bottom_nav_bar: ^6.2.1
 
 dev_dependencies:
   flutter_test:
