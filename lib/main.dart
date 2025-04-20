@@ -4,10 +4,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:iot_plant_control/screen/persistent_bar_screen.dart';
+import 'package:iot_plant_control/services/background_service.dart';
 
-void main() {
+void main() async {
   // Dibutuhkan setpreferredOrientations.
   WidgetsFlutterBinding.ensureInitialized();
+
+  await initService();
 
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(
@@ -25,7 +28,9 @@ void main() {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  initializeDateFormatting('id_ID', null).then((_) => runApp(const MyApp()));
+  initializeDateFormatting('id_ID', null).then((_) {
+    runApp(const MyApp());
+  });
 }
 
 class MyApp extends StatelessWidget {
