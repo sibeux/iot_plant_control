@@ -4,9 +4,9 @@ import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:iot_plant_control/controller/water_controller.dart';
 import 'package:iot_plant_control/models/water_time.dart';
-import 'package:iot_plant_control/widgets/water_widget/change_time_modal/button_confirm.dart';
-import 'package:iot_plant_control/widgets/water_widget/change_time_modal/content_modal/content_change_time_modal.dart';
-import 'package:iot_plant_control/widgets/water_widget/change_time_modal/title_change_time_modal.dart';
+import 'package:iot_plant_control/widgets/water_widget/change_water_modal/button_confirm.dart';
+import 'package:iot_plant_control/widgets/water_widget/change_water_modal/content_modal/content_change_time_modal.dart';
+import 'package:iot_plant_control/widgets/water_widget/change_water_modal/title_change_time_modal.dart';
 
 void changeTimeModal(BuildContext context, {required WaterTime waterTime}) {
   final waterController = Get.find<WaterController>();

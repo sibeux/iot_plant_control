@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:iot_plant_control/controller/mqtt/mqtt_controller.dart';
 import 'package:iot_plant_control/models/water_time.dart';
-import 'package:iot_plant_control/widgets/toast.dart';
+import 'package:iot_plant_control/components/toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class WaterController extends GetxController {

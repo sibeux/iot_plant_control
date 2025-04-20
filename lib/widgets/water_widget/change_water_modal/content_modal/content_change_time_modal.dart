@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:iot_plant_control/controller/water_controller.dart';
-import 'package:iot_plant_control/widgets/water_widget/change_time_modal/content_modal/duration_change.dart';
-import 'package:iot_plant_control/widgets/water_widget/change_time_modal/content_modal/time_picker_change.dart';
+import 'package:iot_plant_control/widgets/water_widget/change_water_modal/content_modal/duration_change.dart';
+import 'package:iot_plant_control/widgets/water_widget/change_water_modal/content_modal/time_picker_change.dart';
 
 class ContentChangeTimeModal extends StatelessWidget {
   const ContentChangeTimeModal({
