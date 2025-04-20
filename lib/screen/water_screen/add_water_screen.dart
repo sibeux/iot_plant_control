@@ -30,9 +30,11 @@ class AddWaterScreen extends StatelessWidget {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
             ),
             SizedBox(height: 3.h),
-            Text(
-              'Watering in 12 hours 12 minutes',
-              style: TextStyle(fontSize: 14.sp, color: Colors.black87),
+            Obx(
+              () => Text(
+                waterController.countdownString.value,
+                style: TextStyle(fontSize: 14.sp, color: Colors.black87),
+              ),
             ),
           ],
         ),
@@ -47,6 +49,7 @@ class AddWaterScreen extends StatelessWidget {
               icon: const Icon(Icons.check),
               onPressed: () {
                 Get.back();
+                waterController.addWatering();
               },
             ),
           ),
@@ -70,6 +73,10 @@ class AddWaterScreen extends StatelessWidget {
                 scrollController: waterController.hourController,
                 onSelectedItemChanged: (index) {
                   waterController.selectedHour.value = index;
+                  waterController.setWaterTimeDifference(
+                    waterController.selectedHour.value,
+                    waterController.selectedMinute.value,
+                  );
                 },
                 children: List<Widget>.generate(24, (index) {
                   return Center(
@@ -95,6 +102,10 @@ class AddWaterScreen extends StatelessWidget {
                 scrollController: waterController.minuteController,
                 onSelectedItemChanged: (index) {
                   waterController.selectedMinute.value = index;
+                  waterController.setWaterTimeDifference(
+                    waterController.selectedHour.value,
+                    waterController.selectedMinute.value,
+                  );
                 },
                 children: List<Widget>.generate(60, (index) {
                   return Center(

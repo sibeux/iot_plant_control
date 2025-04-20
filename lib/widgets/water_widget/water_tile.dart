@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:iot_plant_control/controller/clock_controller.dart';
 import 'package:iot_plant_control/models/water_time.dart';
 
 import '../../controller/water_controller.dart';
@@ -13,10 +14,34 @@ class WaterTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final waterController = Get.find<WaterController>();
+    final clockController = Get.find<ClockController>();
+    final hour = waterTime.time.split(':')[0];
+    final minute = waterTime.time.split(':')[1];
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w),
       child: Dismissible(
         key: Key(waterTime.id.toString()),
+        confirmDismiss: (direction) {
+          return showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text('Delete Watering Time'),
+                content: const Text('Are you sure you want to delete this?'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Get.back(result: false),
+                    child: const Text('Cancel'),
+                  ),
+                  TextButton(
+                    onPressed: () => Get.back(result: true),
+                    child: const Text('Delete'),
+                  ),
+                ],
+              );
+            },
+          );
+        },
         direction: DismissDirection.horizontal,
         onDismissed: (direction) {
           waterController.removeWatering(waterTime.id.toString());
@@ -54,7 +79,7 @@ class WaterTile extends StatelessWidget {
                         children: [
                           Obx(
                             () => Text(
-                              '08:00',
+                              waterTime.time,
                               style: TextStyle(
                                 fontSize: 30.sp,
                                 fontWeight: FontWeight.w500,
@@ -78,7 +103,12 @@ class WaterTile extends StatelessWidget {
                       SizedBox(height: 5.h),
                       Obx(
                         () => Text(
-                          'Daily | Alarm in 9 hours 29 minutes',
+                          !waterTime.isActive.value
+                              ? 'Off'
+                              : clockController.refreshTime.value ||
+                                  !clockController.refreshTime.value
+                              ? 'Daily | ${waterController.getWaterTimeDifference(int.parse(hour), int.parse(minute))}'
+                              : '',
                           style: TextStyle(
                             fontSize: 13.sp,
                             fontWeight: FontWeight.w400,

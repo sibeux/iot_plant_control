@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 
 class ClockController extends GetxController{
   var timeNotifier = ''.obs; // Observable variable to hold the time
+  var refreshTime = false.obs; // Observable variable to hold the time for refresh
   late Timer _timer;
   
   // Update the time every second
@@ -13,6 +14,7 @@ class ClockController extends GetxController{
     final locale = 'id_ID'; // Can dynamically fetch this if needed
     final formatter = DateFormat.Hm(locale); // 24-hour format: HH:mm
     timeNotifier.value = formatter.format(now);
+    refreshTime.value = !refreshTime.value; // Trigger a refresh
   }
 
   @override
