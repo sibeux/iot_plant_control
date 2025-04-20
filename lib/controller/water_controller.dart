@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:iot_plant_control/controller/mqtt/mqtt_controller.dart';
 import 'package:iot_plant_control/models/water_time.dart';
 import 'package:iot_plant_control/widgets/toast.dart';
@@ -36,7 +37,6 @@ class WaterController extends GetxController {
   }
 
   Future<void> sortWaterTime() async {
-    await saveWaterTimes(waterTime);
     waterTime.sort((a, b) {
       final timeA = a.time.split(':').map(int.parse).toList();
       final timeB = b.time.split(':').map(int.parse).toList();
@@ -61,7 +61,7 @@ class WaterController extends GetxController {
     setWaterTimeDifference(selectedHour.value, selectedMinute.value);
   }
 
-  void addWatering() {
+  Future<void> addWatering() async {
     String time =
         '${selectedHour.value.toString().padLeft(2, '0')}:${selectedMinute.value.toString().padLeft(2, '0')}';
     waterTime.add(
@@ -69,6 +69,7 @@ class WaterController extends GetxController {
     );
     showToast(countdownString.value);
     sortWaterTime();
+    await saveWaterTimes(waterTime);
   }
 
   Future<void> removeWatering(String id) async {
@@ -93,13 +94,49 @@ class WaterController extends GetxController {
     await saveWaterTimes(waterTime);
   }
 
-  void updateWatering(String id, String time) {
+  void updateWatering({
+    required String id,
+    required String time,
+    required String duration,
+  }) {
     int index = waterTime.indexWhere((element) => element.id == id);
     if (index != -1) {
       waterTime[index].time = time;
+      waterTime[index].duration = duration;
     }
     sortWaterTime();
     updateRefresh.value = !updateRefresh.value;
+  }
+
+  void formatDuration(String value) {
+    String intFormatter(String input) {
+      int number = int.parse(input);
+
+      var formatter = NumberFormat.currency(
+        locale: 'id',
+        symbol: '',
+        decimalDigits: 0,
+      );
+
+      String formattedNumber = formatter.format(number);
+      return formattedNumber;
+    }
+
+    if (value.isNotEmpty) {
+      value = value.replaceAll('.', '');
+      value = value.replaceAll(',', '');
+      value = value.replaceAll(' ', '');
+    }
+    if (value.isNotEmpty) {
+      selectedDuration.value = value;
+      durationController.text = intFormatter(value);
+    }
+    if (value == '0') {
+      selectedDuration.value = '1';
+      durationController.text = selectedDuration.value;
+      return;
+    }
+    update();
   }
 
   Future<void> saveWaterTimes(RxList<WaterTime> list) async {
@@ -160,6 +197,8 @@ class WaterController extends GetxController {
       countdownString.value =
           'Watering in $hours ${hours == 1 ? "hour" : "hours"} '
           '$minutes ${minutes == 1 ? "minute" : "minutes"}';
+    } else if (hours == 0 && minutes < 1) {
+      countdownString.value = 'Watering in less than 1 minute';
     } else {
       countdownString.value = 'Watering now';
     }
@@ -191,6 +230,8 @@ class WaterController extends GetxController {
     } else if (hours > 0 && minutes > 0) {
       return 'Watering in $hours ${hours == 1 ? "hour" : "hours"} '
           '$minutes ${minutes == 1 ? "minute" : "minutes"}';
+    } else if (hours == 0 && minutes < 1) {
+      return 'Watering in less than 1 minute';
     } else {
       return 'Watering now';
     }

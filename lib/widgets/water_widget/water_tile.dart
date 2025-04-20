@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:iot_plant_control/controller/clock_controller.dart';
 import 'package:iot_plant_control/models/water_time.dart';
 import 'package:iot_plant_control/widgets/water_widget/change_time_modal.dart';
@@ -27,16 +28,24 @@ class WaterTile extends StatelessWidget {
             context: context,
             builder: (context) {
               return AlertDialog(
+                backgroundColor: HexColor('#fefffe'),
+                surfaceTintColor: Colors.transparent,
                 title: const Text('Delete Watering Time'),
                 content: const Text('Are you sure you want to delete this?'),
                 actions: [
                   TextButton(
                     onPressed: () => Get.back(result: false),
-                    child: const Text('Cancel'),
+                    child: Text(
+                      'Cancel',
+                      style: TextStyle(color: Colors.black.withAlpha(150)),
+                    ),
                   ),
                   TextButton(
                     onPressed: () => Get.back(result: true),
-                    child: const Text('Delete'),
+                    child: Text(
+                      'Delete',
+                      style: TextStyle(color: HexColor('#45D695')),
+                    ),
                   ),
                 ],
               );
@@ -121,7 +130,7 @@ class WaterTile extends StatelessWidget {
                                               child: Text(
                                                 '${int.tryParse(waterTime.duration)} ${int.tryParse(waterTime.duration) == 1 ? 'minute' : 'minutes'}',
                                                 style: TextStyle(
-                                                  fontSize: 18.sp,
+                                                  fontSize: 16.sp,
                                                   color:
                                                       waterController
                                                               .waterTime[waterController

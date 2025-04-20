@@ -35,6 +35,7 @@ void addDurationModal(BuildContext context) {
           controller: waterController.durationController,
           keyboardType: TextInputType.number,
           textInputAction: TextInputAction.none,
+          onChanged: (value) => waterController.formatDuration(value),
           decoration: InputDecoration(
             hintText: 'Enter duration',
             // Beri border membulat pada TextField
@@ -72,6 +73,32 @@ void addDurationModal(BuildContext context) {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Expanded(
+                child: Center(
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.of(context).pop(false);
+                    },
+                    child: Container(
+                      height: 40.h,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: Colors.black.withAlpha(50),
+                      ),
+                      child: Text(
+                        'Cancel',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(width: 10.w),
               Expanded(
                 child: Center(
                   child: InkWell(
