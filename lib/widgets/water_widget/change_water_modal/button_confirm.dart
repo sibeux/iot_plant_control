@@ -16,7 +16,7 @@ class ButtonConfirm extends StatelessWidget {
           child: Center(
             child: InkWell(
               onTap: () {
-                // Agar then() di bawah bisa membedakan antara
+                // Agar then() di alert dialog bisa membedakan antara
                 // dismiss dan confirm.
                 Navigator.of(context).pop(true);
               },

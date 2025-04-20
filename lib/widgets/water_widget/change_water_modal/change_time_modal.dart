@@ -36,11 +36,12 @@ void changeTimeModal(BuildContext context, {required WaterTime waterTime}) {
           top: 0,
           bottom: 15.h,
         ),
-        title: TitleChangeTimeModal(waterController: waterController, waterTime: waterTime,),
+        title: TitleChangeTimeModal(
+          waterController: waterController,
+          waterTime: waterTime,
+        ),
         content: ContentChangeTimeModal(waterController: waterController),
-        actions: <Widget>[
-          ButtonConfirm(),
-        ],
+        actions: <Widget>[ButtonConfirm()],
       );
     },
   ).then((value) {
