@@ -142,6 +142,10 @@ class WaterTile extends StatelessWidget {
                       value: waterTime.isActive.value,
                       onChanged: (value) {
                         waterTime.isActive.value = value;
+                        waterController.toggleWatering(
+                          waterTime.id.toString(),
+                          value,
+                        );
                       },
                       activeColor: Color.fromARGB(255, 69, 214, 149),
                       inactiveTrackColor: Color(0xffD9D9D9),

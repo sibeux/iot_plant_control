@@ -6,7 +6,7 @@ import 'package:iot_plant_control/controller/clock_controller.dart';
 import 'package:iot_plant_control/controller/image_slide_controller.dart';
 import 'package:iot_plant_control/controller/mqtt/mqtt_controller.dart';
 import 'package:iot_plant_control/widgets/box_monitor.dart';
-import 'package:iot_plant_control/widgets/tds_control_slide.dart';
+import 'package:iot_plant_control/widgets/tds_widget/tds_control_slide.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:intl/intl.dart';
 

@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iot_plant_control/models/water_time.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class WaterController extends GetxController {
   var waterTime = RxList<WaterTime>([]);
@@ -16,8 +19,8 @@ class WaterController extends GetxController {
   var updateRefresh = false.obs;
 
   @override
-  void onInit() {
-    waterTime.add(WaterTime(time: '08:00'));
+  Future<void> onInit() async {
+    waterTime.value = await loadWaterTimes();
     super.onInit();
   }
 
@@ -28,7 +31,8 @@ class WaterController extends GetxController {
     super.onClose();
   }
 
-  void sortWaterTime() {
+  Future<void> sortWaterTime() async {
+    await saveWaterTimes(waterTime);
     waterTime.sort((a, b) {
       final timeA = a.time.split(':').map(int.parse).toList();
       final timeB = b.time.split(':').map(int.parse).toList();
@@ -51,7 +55,6 @@ class WaterController extends GetxController {
     selectedHour.value = hour;
     selectedMinute.value = minute;
     setWaterTimeDifference(selectedHour.value, selectedMinute.value);
-
   }
 
   void addWatering() {
@@ -61,16 +64,18 @@ class WaterController extends GetxController {
     sortWaterTime();
   }
 
-  void removeWatering(String id) {
+  Future<void> removeWatering(String id) async {
     int index = waterTime.indexWhere((element) => element.id == id);
     waterTime.removeAt(index);
+    await saveWaterTimes(waterTime);
   }
 
-  void toggleWatering(String id, bool value) {
+  Future<void> toggleWatering(String id, bool value) async {
     int index = waterTime.indexWhere((element) => element.id == id);
     if (index != -1) {
       waterTime[index].isActive.value = value;
     }
+    await saveWaterTimes(waterTime);
   }
 
   void updateWatering(String id, String time) {
@@ -80,6 +85,26 @@ class WaterController extends GetxController {
     }
     sortWaterTime();
     updateRefresh.value = !updateRefresh.value;
+  }
+
+  Future<void> saveWaterTimes(RxList<WaterTime> list) async {
+    final prefs = await SharedPreferences.getInstance();
+    final List<String> jsonList =
+        list.map((item) => jsonEncode(item.toJson())).toList();
+    await prefs.setStringList('water_times', jsonList);
+  }
+
+  Future<RxList<WaterTime>> loadWaterTimes() async {
+    final prefs = await SharedPreferences.getInstance();
+    final List<String>? jsonList = prefs.getStringList('water_times');
+
+    if (jsonList != null) {
+      final items =
+          jsonList.map((e) => WaterTime.fromJson(jsonDecode(e))).toList();
+      return RxList<WaterTime>.from(items);
+    }
+
+    return RxList<WaterTime>();
   }
 
   void setWaterTimeDifference(int selectedHour, int selectedMinute) {

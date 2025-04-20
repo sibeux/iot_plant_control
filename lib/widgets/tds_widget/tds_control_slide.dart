@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:iot_plant_control/controller/tds_controller.dart';
-import 'package:iot_plant_control/widgets/button_mix.dart';
+import 'package:iot_plant_control/widgets/tds_widget/button_mix.dart';
 
 class TdsControlSlide extends StatelessWidget {
   const TdsControlSlide({super.key, required this.type});

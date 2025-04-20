@@ -13,10 +13,11 @@ class ButtonMix extends StatelessWidget {
     final mqttController = Get.find<MqttController>();
     final tdsController = Get.find<TdsController>();
     return ElevatedButton(
-      onPressed: () {
+      onPressed: () async {
         mqttController.publishTDS(
           'TDS: ${tdsController.tdsValue.value.toStringAsFixed(0)}',
         );
+        await tdsController.saveTdsValue();
       },
       style: ElevatedButton.styleFrom(
         foregroundColor: Colors.white,
