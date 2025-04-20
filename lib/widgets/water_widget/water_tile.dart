@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:iot_plant_control/controller/clock_controller.dart';
 import 'package:iot_plant_control/models/water_time.dart';
-import 'package:iot_plant_control/widgets/water_widget/change_time_modal.dart';
+import 'package:iot_plant_control/widgets/water_widget/change_time_modal/change_time_modal.dart';
 
 import '../../controller/water_controller.dart';
 
