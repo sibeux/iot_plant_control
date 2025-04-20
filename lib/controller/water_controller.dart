@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iot_plant_control/models/water_time.dart';
+import 'package:iot_plant_control/widgets/toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class WaterController extends GetxController {
@@ -61,6 +62,7 @@ class WaterController extends GetxController {
     String time =
         '${selectedHour.value.toString().padLeft(2, '0')}:${selectedMinute.value.toString().padLeft(2, '0')}';
     waterTime.add(WaterTime(time: time, isActive: true));
+    showToast(countdownString.value);
     sortWaterTime();
   }
 
@@ -74,6 +76,14 @@ class WaterController extends GetxController {
     int index = waterTime.indexWhere((element) => element.id == id);
     if (index != -1) {
       waterTime[index].isActive.value = value;
+    }
+    if (value) {
+      showToast(
+        getWaterTimeDifference(
+          int.parse(waterTime[index].time.split(':')[0]),
+          int.parse(waterTime[index].time.split(':')[1]),
+        ),
+      );
     }
     await saveWaterTimes(waterTime);
   }

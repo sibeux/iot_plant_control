@@ -178,7 +178,16 @@ void changeTimeModal(BuildContext context, {required WaterTime waterTime}) {
           waterTime.id,
           '${waterController.selectedHour.value.toString().padLeft(2, '0')}:${waterController.selectedMinute.value.toString().padLeft(2, '0')}',
         );
-        waterController.toggleWatering(waterTime.id, true);
+        if (defaultToggle == false) {
+          waterController.toggleWatering(waterTime.id, true);
+        } else {
+          waterController.toggleWatering(
+            waterTime.id,
+            waterTime.isActive.value,
+          );
+        }
+      } else if (defaultToggle != waterTime.isActive.value) {
+        waterController.toggleWatering(waterTime.id, waterTime.isActive.value);
       }
     } else {
       if (defaultToggle != waterTime.isActive.value) {
