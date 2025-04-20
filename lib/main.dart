@@ -4,13 +4,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:iot_plant_control/screen/persistent_bar_screen.dart';
-import 'package:iot_plant_control/services/background_service.dart';
+import 'package:iot_plant_control/services/example_background_service.dart';
 
 void main() async {
   // Dibutuhkan setpreferredOrientations.
   WidgetsFlutterBinding.ensureInitialized();
 
-  await initService();
+  await initServiceExample();
 
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(
