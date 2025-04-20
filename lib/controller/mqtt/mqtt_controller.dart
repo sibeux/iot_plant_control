@@ -1,3 +1,4 @@
+
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:mqtt_client/mqtt_client.dart';
@@ -49,7 +50,7 @@ class MqttController extends GetxController {
         recMess.payload.message,
       );
 
-      if (!payload.contains('TDS:')) {
+      if (payload.contains(',temp:')) {
         if (kDebugMode) {
           print('📥 Received on $topic: $payload From Sensor!');
         }
@@ -90,6 +91,22 @@ class MqttController extends GetxController {
     if (client.connectionStatus?.state == MqttConnectionState.connected) {
       final builder = MqttClientPayloadBuilder();
       builder.addString(value);
+
+      client.publishMessage(topic, MqttQos.atMostOnce, builder.payload!);
+      if (kDebugMode) {
+        print('📤 Published $value to $topic');
+      }
+    } else {
+      if (kDebugMode) {
+        print('❗ MQTT not connected');
+      }
+    }
+  }
+
+  void publishWateringTime(String value) {
+    if (client.connectionStatus?.state == MqttConnectionState.connected) {
+      final builder = MqttClientPayloadBuilder();
+      builder.addString((value));
 
       client.publishMessage(topic, MqttQos.atMostOnce, builder.payload!);
       if (kDebugMode) {

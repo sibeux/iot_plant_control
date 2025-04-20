@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:iot_plant_control/controller/mqtt/mqtt_controller.dart';
 import 'package:iot_plant_control/models/water_time.dart';
 import 'package:iot_plant_control/widgets/toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,9 +12,11 @@ class WaterController extends GetxController {
 
   late FixedExtentScrollController hourController;
   late FixedExtentScrollController minuteController;
+  late TextEditingController durationController;
 
   var selectedHour = 0.obs;
   var selectedMinute = 0.obs;
+  var selectedDuration = '2'.obs;
 
   var countdownString = ''.obs;
 
@@ -61,7 +64,9 @@ class WaterController extends GetxController {
   void addWatering() {
     String time =
         '${selectedHour.value.toString().padLeft(2, '0')}:${selectedMinute.value.toString().padLeft(2, '0')}';
-    waterTime.add(WaterTime(time: time, isActive: true));
+    waterTime.add(
+      WaterTime(time: time, duration: selectedDuration.value, isActive: true),
+    );
     showToast(countdownString.value);
     sortWaterTime();
   }
@@ -98,10 +103,19 @@ class WaterController extends GetxController {
   }
 
   Future<void> saveWaterTimes(RxList<WaterTime> list) async {
+    final mqttController = Get.find<MqttController>();
     final prefs = await SharedPreferences.getInstance();
-    final List<String> jsonList =
+
+    final List<Map<String, dynamic>> mapList =
+        list.map((item) => item.toJson()).toList();
+
+    final String jsonPayload = jsonEncode(mapList);
+    mqttController.publishWateringTime(jsonPayload);
+
+    // Untuk local storage tetap simpan sebagai List<String>
+    final List<String> jsonListForPrefs =
         list.map((item) => jsonEncode(item.toJson())).toList();
-    await prefs.setStringList('water_times', jsonList);
+    await prefs.setStringList('water_times', jsonListForPrefs);
   }
 
   Future<RxList<WaterTime>> loadWaterTimes() async {

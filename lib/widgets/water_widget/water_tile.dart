@@ -77,29 +77,73 @@ class WaterTile extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Obx(
                             () =>
                                 waterController.updateRefresh.value ||
                                         !waterController.updateRefresh.value
-                                    ? Text(
-                                      waterTime.time,
-                                      style: TextStyle(
-                                        fontSize: 30.sp,
-                                        fontWeight: FontWeight.w500,
-                                        color:
-                                            waterController
-                                                    .waterTime[waterController
-                                                        .waterTime
-                                                        .indexWhere(
-                                                          (element) =>
-                                                              element.id ==
-                                                              waterTime.id,
-                                                        )]
-                                                    .isActive
-                                                    .value
-                                                ? Color(0xff000000)
-                                                : Colors.grey.withAlpha(150),
+                                    ? Text.rich(
+                                      TextSpan(
+                                        children: [
+                                          TextSpan(
+                                            text: waterTime.time,
+                                            style: TextStyle(
+                                              fontSize: 30.sp,
+                                              fontWeight: FontWeight.w500,
+                                              color:
+                                                  waterController
+                                                          .waterTime[waterController
+                                                              .waterTime
+                                                              .indexWhere(
+                                                                (element) =>
+                                                                    element
+                                                                        .id ==
+                                                                    waterTime
+                                                                        .id,
+                                                              )]
+                                                          .isActive
+                                                          .value
+                                                      ? Color(0xff000000)
+                                                      : Colors.grey.withAlpha(
+                                                        150,
+                                                      ),
+                                            ),
+                                          ),
+                                          WidgetSpan(
+                                            alignment:
+                                                PlaceholderAlignment.baseline,
+                                            baseline: TextBaseline.alphabetic,
+                                            child: Container(
+                                              margin: EdgeInsets.only(
+                                                left: 5.w,
+                                              ),
+                                              child: Text(
+                                                '${int.tryParse(waterTime.duration)} ${int.tryParse(waterTime.duration) == 1 ? 'minute' : 'minutes'}',
+                                                style: TextStyle(
+                                                  fontSize: 18.sp,
+                                                  color:
+                                                      waterController
+                                                              .waterTime[waterController
+                                                                  .waterTime
+                                                                  .indexWhere(
+                                                                    (element) =>
+                                                                        element
+                                                                            .id ==
+                                                                        waterTime
+                                                                            .id,
+                                                                  )]
+                                                              .isActive
+                                                              .value
+                                                          ? Colors.black
+                                                              .withAlpha(200)
+                                                          : Colors.grey
+                                                              .withAlpha(150),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     )
                                     : SizedBox(),
