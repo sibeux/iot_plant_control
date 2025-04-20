@@ -13,10 +13,10 @@ class WaterController extends GetxController {
 
   var countdownString = ''.obs;
 
+  var updateRefresh = false.obs;
+
   @override
   void onInit() {
-    waterTime.add(WaterTime(time: '08:00'));
-    waterTime.add(WaterTime(time: '08:00'));
     waterTime.add(WaterTime(time: '08:00'));
     super.onInit();
   }
@@ -45,6 +45,15 @@ class WaterController extends GetxController {
     setWaterTimeDifference(selectedHour.value, selectedMinute.value);
   }
 
+  void modalChangeSetTime({required int hour, required int minute}) {
+    hourController = FixedExtentScrollController(initialItem: hour);
+    minuteController = FixedExtentScrollController(initialItem: minute);
+    selectedHour.value = hour;
+    selectedMinute.value = minute;
+    setWaterTimeDifference(selectedHour.value, selectedMinute.value);
+
+  }
+
   void addWatering() {
     String time =
         '${selectedHour.value.toString().padLeft(2, '0')}:${selectedMinute.value.toString().padLeft(2, '0')}';
@@ -62,6 +71,15 @@ class WaterController extends GetxController {
     if (index != -1) {
       waterTime[index].isActive.value = value;
     }
+  }
+
+  void updateWatering(String id, String time) {
+    int index = waterTime.indexWhere((element) => element.id == id);
+    if (index != -1) {
+      waterTime[index].time = time;
+    }
+    sortWaterTime();
+    updateRefresh.value = !updateRefresh.value;
   }
 
   void setWaterTimeDifference(int selectedHour, int selectedMinute) {

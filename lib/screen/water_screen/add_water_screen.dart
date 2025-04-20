@@ -88,11 +88,11 @@ class AddWaterScreen extends StatelessWidget {
                 }),
               ),
             ),
-            const Text(":", style: TextStyle(fontSize: 24)),
+            Text(":", style: TextStyle(fontSize: 24.sp)),
             // Menit
             SizedBox(
-              width: 100,
-              height: 300,
+              width: 100.w,
+              height: 300.h,
               child: CupertinoPicker(
                 looping: true,
                 itemExtent: 60,

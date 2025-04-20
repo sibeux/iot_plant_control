@@ -3,7 +3,7 @@ import 'package:uuid/uuid.dart';
 
 class WaterTime {
   final String id;
-  final String time;
+  String time;
   RxBool isActive;
 
   WaterTime({String? id, required this.time, bool isActive = false})

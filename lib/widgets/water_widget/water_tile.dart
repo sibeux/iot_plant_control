@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:iot_plant_control/controller/clock_controller.dart';
 import 'package:iot_plant_control/models/water_time.dart';
+import 'package:iot_plant_control/widgets/water_widget/change_time_modal.dart';
 
 import '../../controller/water_controller.dart';
 
@@ -62,7 +63,7 @@ class WaterTile extends StatelessWidget {
               Clip.antiAlias, // ✅ ini penting biar splash-nya ikut radius.
           child: InkWell(
             onTap: () {
-              waterTime.isActive.value = !waterTime.isActive.value;
+              changeTimeModal(context, waterTime: waterTime);
             },
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
@@ -78,25 +79,30 @@ class WaterTile extends StatelessWidget {
                       Row(
                         children: [
                           Obx(
-                            () => Text(
-                              waterTime.time,
-                              style: TextStyle(
-                                fontSize: 30.sp,
-                                fontWeight: FontWeight.w500,
-                                color:
-                                    waterController
-                                            .waterTime[waterController.waterTime
-                                                .indexWhere(
-                                                  (element) =>
-                                                      element.id ==
-                                                      waterTime.id,
-                                                )]
-                                            .isActive
-                                            .value
-                                        ? Color(0xff000000)
-                                        : Colors.grey.withAlpha(150),
-                              ),
-                            ),
+                            () =>
+                                waterController.updateRefresh.value ||
+                                        !waterController.updateRefresh.value
+                                    ? Text(
+                                      waterTime.time,
+                                      style: TextStyle(
+                                        fontSize: 30.sp,
+                                        fontWeight: FontWeight.w500,
+                                        color:
+                                            waterController
+                                                    .waterTime[waterController
+                                                        .waterTime
+                                                        .indexWhere(
+                                                          (element) =>
+                                                              element.id ==
+                                                              waterTime.id,
+                                                        )]
+                                                    .isActive
+                                                    .value
+                                                ? Color(0xff000000)
+                                                : Colors.grey.withAlpha(150),
+                                      ),
+                                    )
+                                    : SizedBox(),
                           ),
                         ],
                       ),
@@ -107,7 +113,10 @@ class WaterTile extends StatelessWidget {
                               ? 'Off'
                               : clockController.refreshTime.value ||
                                   !clockController.refreshTime.value
-                              ? 'Daily | ${waterController.getWaterTimeDifference(int.parse(hour), int.parse(minute))}'
+                              ? waterController.getWaterTimeDifference(
+                                int.parse(hour),
+                                int.parse(minute),
+                              )
                               : '',
                           style: TextStyle(
                             fontSize: 13.sp,
