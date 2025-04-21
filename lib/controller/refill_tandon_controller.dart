@@ -15,14 +15,18 @@ class RefillTandonController extends GetxController {
     _checkServiceStatus();
   }
 
-  Future<void> toggleService(bool start) async {
+  Future<void> toggleService(bool start, {isFromButton = false}) async {
     isTap.value = !isTap.value;
     isLoading.value = true;
+    final prefs = await SharedPreferences.getInstance();
     if (start) {
-      final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isFull', false);
       await _service.startService();
     } else {
+      await prefs.setBool('isFull', true);
+      if (!isFromButton) {
+      showTandonPenuhNotification();
+      }
       _service.invoke('stopService');
     }
 
@@ -35,12 +39,5 @@ class RefillTandonController extends GetxController {
     final isRunning = await _service.isRunning();
     isServiceRunning.value = isRunning;
     isLoading.value = false;
-  }
-
-  void stopService() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isFull', true);
-    showTandonPenuhNotification();
-    _service.invoke('stopService');
   }
 }

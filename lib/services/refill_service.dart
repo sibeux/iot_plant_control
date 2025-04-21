@@ -68,16 +68,21 @@ Future<void> initRefillService() async {
 }
 
 @pragma('vm:entry-point')
-void onStart(ServiceInstance service) {
+void onStart(ServiceInstance service) async {
   final MqttController mqttController = Get.put(MqttController());
   if (service is AndroidServiceInstance) {
     showPengisianTandonNotification();
-    mqttController.connectToBroker();
   }
 
+  int counter = 0;
+
+  final prefs = await SharedPreferences.getInstance();
   // Berfungsi saat APK dihapus dari recent apps.
-  Timer.periodic(const Duration(milliseconds: 500), (timer) async {
-    final prefs = await SharedPreferences.getInstance();
+  Timer.periodic(const Duration(milliseconds: 500), (timer) {
+    if (counter == 0 && mqttController.mqttIsConnected.value) {
+      mqttController.publishToBroker('mulaipengisiantandonair');
+      counter++;
+    }
     final isFull = prefs.getBool('isFull');
     if (isFull == true) {
       service.stopSelf();
@@ -91,5 +96,3 @@ void onStart(ServiceInstance service) {
     service.stopSelf();
   });
 }
-
-

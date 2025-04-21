@@ -10,7 +10,7 @@ class WaterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final waterController = Get.put(WaterController());
+    final waterController = Get.find<WaterController>();
     return Scaffold(
       backgroundColor: Color(0xfff7f7f7),
       appBar: AppBar(

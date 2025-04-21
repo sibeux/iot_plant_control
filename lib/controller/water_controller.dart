@@ -147,7 +147,7 @@ class WaterController extends GetxController {
         list.map((item) => item.toJson()).toList();
 
     final String jsonPayload = jsonEncode(mapList);
-    mqttController.publishWateringTime(jsonPayload);
+    mqttController.publishToBroker(jsonPayload);
 
     // Untuk local storage tetap simpan sebagai List<String>
     final List<String> jsonListForPrefs =

@@ -48,7 +48,10 @@ class HomeScreen extends StatelessWidget {
                 SizedBox(height: 10.h),
                 TitleDate(formattedDate: formattedDate),
                 SizedBox(height: 15.h),
-                BoxMonitor(clockController: clockController, mqttController: mqttController),
+                BoxMonitor(
+                  clockController: clockController,
+                  mqttController: mqttController,
+                ),
               ],
             ),
           ),

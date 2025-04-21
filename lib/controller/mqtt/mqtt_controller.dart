@@ -1,4 +1,3 @@
-
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:iot_plant_control/controller/refill_tandon_controller.dart';
@@ -10,6 +9,7 @@ class MqttController extends GetxController {
   final topic = 'greenhouse/ph';
   var phValue = 0.obs;
   var temperatureValue = 0.obs;
+  var mqttIsConnected = false.obs;
 
   @override
   void onInit() {
@@ -67,14 +67,12 @@ class MqttController extends GetxController {
         }
         phValue.value = int.parse(data['ph'] ?? '0');
         temperatureValue.value = int.parse(data['temp'] ?? '0');
-      } 
-      else if (payload.contains('tandonairsudahpenuh')){
+      } else if (payload.contains('tandonairsudahpenuh')) {
         if (kDebugMode) {
-          print('📥 Received on $topic: $payload From Sensor!');
+          print('📥 Received on $topic: $payload at ${DateTime.now()}');
         }
-        Get.find<RefillTandonController>().stopService();
-      }
-      else {
+        Get.put(RefillTandonController()).toggleService(false);
+      } else {
         if (kDebugMode) {
           print('📥 Received on $topic: $payload From Flutter!');
         }
@@ -83,6 +81,7 @@ class MqttController extends GetxController {
   }
 
   void onConnected() {
+    mqttIsConnected.value = true;
     if (kDebugMode) {
       print('✅ MQTT Connected');
     }
@@ -95,26 +94,10 @@ class MqttController extends GetxController {
     }
   }
 
-  void publishTDS(String value) {
+  void publishToBroker(String value) {
     if (client.connectionStatus?.state == MqttConnectionState.connected) {
       final builder = MqttClientPayloadBuilder();
       builder.addString(value);
-
-      client.publishMessage(topic, MqttQos.atMostOnce, builder.payload!);
-      if (kDebugMode) {
-        print('📤 Published $value to $topic');
-      }
-    } else {
-      if (kDebugMode) {
-        print('❗ MQTT not connected');
-      }
-    }
-  }
-
-  void publishWateringTime(String value) {
-    if (client.connectionStatus?.state == MqttConnectionState.connected) {
-      final builder = MqttClientPayloadBuilder();
-      builder.addString((value));
 
       client.publishMessage(topic, MqttQos.atMostOnce, builder.payload!);
       if (kDebugMode) {

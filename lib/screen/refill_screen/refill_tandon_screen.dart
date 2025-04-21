@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:iot_plant_control/controller/mqtt/mqtt_controller.dart';
 import 'package:iot_plant_control/controller/refill_tandon_controller.dart';
 
 class RefillTandonScreen extends StatelessWidget {
@@ -10,7 +11,8 @@ class RefillTandonScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final refillTandonController = Get.put(RefillTandonController());
+    final refillTandonController = Get.find<RefillTandonController>();
+    final mqttController = Get.find<MqttController>();
     return Scaffold(
       backgroundColor: Color(0xfff7f7f7),
       appBar: AppBar(
@@ -66,7 +68,11 @@ class RefillTandonScreen extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () {
                     if (refillTandonController.isServiceRunning.value) {
-                      refillTandonController.toggleService(false);
+                      refillTandonController.toggleService(
+                        false,
+                        isFromButton: true,
+                      );
+                      mqttController.publishToBroker('stoppengisiantandonair');
                     } else {
                       refillTandonController.toggleService(true);
                     }
