@@ -1,6 +1,7 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+import 'package:iot_plant_control/controller/refill_tandon_controller.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 
@@ -66,7 +67,14 @@ class MqttController extends GetxController {
         }
         phValue.value = int.parse(data['ph'] ?? '0');
         temperatureValue.value = int.parse(data['temp'] ?? '0');
-      } else {
+      } 
+      else if (payload.contains('tandonairsudahpenuh')){
+        if (kDebugMode) {
+          print('📥 Received on $topic: $payload From Sensor!');
+        }
+        Get.put(RefillTandonController()).stopService();
+      }
+      else {
         if (kDebugMode) {
           print('📥 Received on $topic: $payload From Flutter!');
         }

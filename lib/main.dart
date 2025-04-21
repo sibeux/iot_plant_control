@@ -3,14 +3,19 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:iot_plant_control/controller/mqtt/mqtt_controller.dart';
 import 'package:iot_plant_control/screen/persistent_bar_screen.dart';
-import 'package:iot_plant_control/services/example_background_service.dart';
+// import 'package:iot_plant_control/services/example_background_service.dart';
+import 'package:iot_plant_control/services/refill_service.dart';
 
 void main() async {
   // Dibutuhkan setpreferredOrientations.
   WidgetsFlutterBinding.ensureInitialized();
 
-  await initServiceExample();
+  Get.put(MqttController());
+
+  // await initServiceExample();
+  await initRefillService();
 
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(
@@ -28,6 +33,7 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+
   initializeDateFormatting('id_ID', null).then((_) {
     runApp(const MyApp());
   });

@@ -1,16 +1,16 @@
 // Layar dengan tombol ON/OFF
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:iot_plant_control/services/example_background_service.dart';
+import 'package:iot_plant_control/services/refill_service.dart';
 
-class RefillScreen extends StatefulWidget {
-  const RefillScreen({super.key});
+class RefillTandonScreen extends StatefulWidget {
+  const RefillTandonScreen({super.key});
 
   @override
-  State<RefillScreen> createState() => _RefillScreenState();
+  State<RefillTandonScreen> createState() => _RefillTandonScreenState();
 }
 
-class _RefillScreenState extends State<RefillScreen> {
+class _RefillTandonScreenState extends State<RefillTandonScreen> {
   bool _isServiceRunning = false;
   final FlutterBackgroundService _service = FlutterBackgroundService();
 
@@ -105,7 +105,7 @@ class _RefillScreenState extends State<RefillScreen> {
             const SizedBox(height: 20),
             // Tombol untuk menampilkan notifikasi kustom (opsional)
             ElevatedButton(
-              onPressed: () => showCustomNotification(),
+              onPressed: () => showPengisianTandonNotification(),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue,
                 padding: const EdgeInsets.symmetric(

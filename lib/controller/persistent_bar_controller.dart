@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:iot_plant_control/screen/home_screen/home_screen.dart';
-import 'package:iot_plant_control/screen/refill_screen/refill_screen.dart';
+import 'package:iot_plant_control/screen/refill_screen/refill_tandon_screen.dart';
 import 'package:iot_plant_control/screen/water_screen/water_screen.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 
@@ -34,7 +34,7 @@ class PersistentBarController extends GetxController {
 
   // Daftar halaman untuk tiap tab
   List<Widget> buildScreens() {
-    return [HomeScreen(), WaterScreen(), RefillScreen()];
+    return [HomeScreen(), WaterScreen(), RefillTandonScreen()];
   }
 
   // Item navigasi untuk tiap tab
