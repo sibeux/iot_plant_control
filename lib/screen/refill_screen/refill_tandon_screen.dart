@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:iot_plant_control/services/refill_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RefillTandonScreen extends StatefulWidget {
   const RefillTandonScreen({super.key});
@@ -29,6 +30,8 @@ class _RefillTandonScreenState extends State<RefillTandonScreen> {
 
   void _toggleService(bool start) async {
     if (start) {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('isFull', false);
       await _service.startService();
     } else {
       _service.invoke('stopService');

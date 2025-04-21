@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
@@ -7,13 +6,12 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:iot_plant_control/controller/mqtt/mqtt_controller.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // this will be used as notification channel id
 const notificationChannelId = 'my_foreground';
 // this will be used for notification id, So you can update your custom notification with this id.
 const notificationId = 888;
-
-
 
 Future<void> initRefillService() async {
   final service = FlutterBackgroundService();
@@ -76,11 +74,28 @@ void onStart(ServiceInstance service) {
     mqttController.connectToBroker();
   }
 
+  Timer.periodic(const Duration(milliseconds: 500), (timer) async {
+    final prefs = await SharedPreferences.getInstance();
+    final isFull = prefs.getBool('isFull');
+    if (isFull == true) {
+      service.stopSelf();
+      showTandonPenuhNotification();
+      timer.cancel();
+      if (kDebugMode) {
+        print('Stopping service by timer...');
+      }
+    }
+    if (kDebugMode) {
+      print('Service is running...: ${DateTime.now()}');
+    }
+  });
+
   // Handler untuk stop service
   service.on('stopService').listen((event) {
     if (kDebugMode) {
       print('Stopping service...');
     }
+    showTandonPenuhNotification();
     service.stopSelf();
   });
 }
@@ -132,36 +147,36 @@ Future<void> showPengisianTandonNotification() async {
 }
 
 Future<void> showTandonPenuhNotification() async {
-  AndroidNotificationDetails
-  refillProgressNotification = AndroidNotificationDetails(
-    'tandon_penuh',
-    'Notifikasi Tandon Penuh',
-    channelDescription: 'Channel untuk notifikasi tandon penuh',
-    importance: Importance.max,
-    priority: Priority.high,
-    // ongoing: true, // Notifikasi tidak bisa dihapus.
-    // autoCancel: false, // Mencegah notifikasi dihapus dengan tap
-    ticker: 'Pengisian tandon air',
-    color: Color.fromARGB(255, 69, 214, 149),
-    largeIcon: DrawableResourceAndroidBitmap('@mipmap/sihalal_icon'),
-    styleInformation: BigTextStyleInformation(
-      'Tandon air Anda telah terisi penuh. Proses pengisian telah selesai.',
-      htmlFormatBigText: true,
-      contentTitle: 'Pengisian Selesai',
-      htmlFormatContentTitle: true,
-      summaryText: 'Tandon air telah terisi penuh',
-      htmlFormatSummaryText: true,
-    ),
-    actions: <AndroidNotificationAction>[
-      // AndroidNotificationAction(
-      //   'lihat_action',
-      //   'OK',
-      //   icon: DrawableResourceAndroidBitmap('@mipmap/sihalal_icon'),
-      //   showsUserInterface: false,
-      //   cancelNotification: true,
-      // ),
-    ],
-  );
+  AndroidNotificationDetails refillProgressNotification =
+      AndroidNotificationDetails(
+        'tandon_penuh',
+        'Notifikasi Tandon Penuh',
+        channelDescription: 'Channel untuk notifikasi tandon penuh',
+        importance: Importance.max,
+        priority: Priority.high,
+        // ongoing: true, // Notifikasi tidak bisa dihapus.
+        // autoCancel: false, // Mencegah notifikasi dihapus dengan tap
+        ticker: 'Pengisian tandon air',
+        color: Color.fromARGB(255, 69, 214, 149),
+        largeIcon: DrawableResourceAndroidBitmap('@mipmap/sihalal_icon'),
+        styleInformation: BigTextStyleInformation(
+          'Tandon air Anda telah terisi penuh. Proses pengisian telah selesai.',
+          htmlFormatBigText: true,
+          contentTitle: 'Tandon Air Penuh',
+          htmlFormatContentTitle: true,
+          summaryText: 'Pengisian Selesai',
+          htmlFormatSummaryText: true,
+        ),
+        actions: <AndroidNotificationAction>[
+          // AndroidNotificationAction(
+          //   'lihat_action',
+          //   'OK',
+          //   icon: DrawableResourceAndroidBitmap('@mipmap/sihalal_icon'),
+          //   showsUserInterface: false,
+          //   cancelNotification: true,
+          // ),
+        ],
+      );
 
   NotificationDetails notificationDetails = NotificationDetails(
     android: refillProgressNotification,
