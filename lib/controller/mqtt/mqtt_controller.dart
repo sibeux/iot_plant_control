@@ -72,7 +72,7 @@ class MqttController extends GetxController {
         if (kDebugMode) {
           print('📥 Received on $topic: $payload From Sensor!');
         }
-        Get.put(RefillTandonController()).stopService();
+        Get.find<RefillTandonController>().stopService();
       }
       else {
         if (kDebugMode) {

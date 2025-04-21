@@ -1,123 +1,117 @@
 // Layar dengan tombol ON/OFF
 import 'package:flutter/material.dart';
-import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:iot_plant_control/widgets/refill_tandon_widget/refill_notification.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:hexcolor/hexcolor.dart';
+import 'package:iot_plant_control/controller/refill_tandon_controller.dart';
 
-class RefillTandonScreen extends StatefulWidget {
+class RefillTandonScreen extends StatelessWidget {
   const RefillTandonScreen({super.key});
 
   @override
-  State<RefillTandonScreen> createState() => _RefillTandonScreenState();
-}
-
-class _RefillTandonScreenState extends State<RefillTandonScreen> {
-  bool _isServiceRunning = false;
-  final FlutterBackgroundService _service = FlutterBackgroundService();
-
-  @override
-  void initState() {
-    super.initState();
-    _checkServiceStatus();
-  }
-
-  void _checkServiceStatus() async {
-    final isRunning = await _service.isRunning();
-    setState(() {
-      _isServiceRunning = isRunning;
-    });
-  }
-
-  void _toggleService(bool start) async {
-    if (start) {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('isFull', false);
-      await _service.startService();
-    } else {
-      _service.invoke('stopService');
-    }
-
-    await Future.delayed(const Duration(milliseconds: 500));
-    _checkServiceStatus();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final refillTandonController = Get.put(RefillTandonController());
     return Scaffold(
-      appBar: AppBar(title: const Text('Kontrol Background Service')),
+      backgroundColor: Color(0xfff7f7f7),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.transparent,
+        titleSpacing: 0,
+        title: Padding(
+          padding: EdgeInsets.only(left: 20.w),
+          child: Text('Refill Tandon'),
+        ),
+        titleTextStyle: TextStyle(
+          color: Colors.black,
+          fontSize: 18.sp,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color:
-                    _isServiceRunning
-                        ? Colors.green.shade100
-                        : Colors.red.shade100,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Text(
-                _isServiceRunning ? 'Service Aktif' : 'Service Tidak Aktif',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+            Divider(height: 0.4.h, thickness: 0.4.h),
+            SizedBox(height: 30.h),
+            Spacer(),
+            Obx(
+              () => Container(
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+                decoration: BoxDecoration(
                   color:
-                      _isServiceRunning
-                          ? Colors.green.shade800
-                          : Colors.red.shade800,
+                      refillTandonController.isServiceRunning.value
+                          ? Colors.green.shade100
+                          : Colors.red.shade100,
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
+                child: Text(
+                  refillTandonController.isServiceRunning.value
+                      ? 'Pump Status: ACTIVE'
+                      : 'Pump Status: INACTIVE',
+                  style: TextStyle(
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.bold,
+                    color:
+                        refillTandonController.isServiceRunning.value
+                            ? Colors.green.shade800
+                            : Colors.red.shade800,
+                  ),
                 ),
               ),
             ),
-            const SizedBox(height: 40),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed:
-                      _isServiceRunning ? null : () => _toggleService(true),
+            SizedBox(height: 40.h),
+            Obx(
+              () => SizedBox(
+                width: 300.w,
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (refillTandonController.isServiceRunning.value) {
+                      refillTandonController.toggleService(false);
+                    } else {
+                      refillTandonController.toggleService(true);
+                    }
+                  },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 40,
-                      vertical: 16,
+                    foregroundColor: Colors.white,
+                    backgroundColor:
+                        !refillTandonController.isServiceRunning.value
+                            ? Color.fromARGB(255, 69, 214, 149)
+                            : HexColor('#e95263'),
+                    elevation: 0, // Menghilangkan shadow
+                    splashFactory: InkRipple.splashFactory,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.r),
                     ),
-                    disabledBackgroundColor: Colors.grey,
                   ),
-                  child: const Text('ON', style: TextStyle(fontSize: 18)),
-                ),
-                const SizedBox(width: 40),
-
-                ElevatedButton(
-                  onPressed:
-                      _isServiceRunning ? () => _toggleService(false) : null,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 40,
-                      vertical: 16,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10.0.w,
+                      vertical: 10.0.h,
                     ),
-                    disabledBackgroundColor: Colors.grey,
+                    child:
+                        refillTandonController.isLoading.value
+                            ? SizedBox(
+                              width: 20.w,
+                              height: 20.h,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2.0.w,
+                              ),
+                            )
+                            : Text(
+                              !refillTandonController.isServiceRunning.value
+                                  ? 'Start'
+                                  : 'Stop',
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                   ),
-                  child: const Text('OFF', style: TextStyle(fontSize: 18)),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            // Tombol untuk menampilkan notifikasi kustom (opsional)
-            ElevatedButton(
-              onPressed: () => showPengisianTandonNotification(),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 12,
                 ),
               ),
-              child: const Text('Tampilkan Notifikasi Kustom'),
             ),
+            Spacer(),
           ],
         ),
       ),
