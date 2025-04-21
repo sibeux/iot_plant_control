@@ -1,4 +1,5 @@
 // Membuat notifikasi manual (opsional, jika ingin menampilkan notifikasi tambahan)
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 Future<void> showPengisianTandonNotification() async {
@@ -12,7 +13,7 @@ Future<void> showPengisianTandonNotification() async {
     // ongoing: true, // Notifikasi tidak bisa dihapus.
     // autoCancel: false, // Mencegah notifikasi dihapus dengan tap
     ticker: 'Pengisian tandon air',
-    // color: Color.fromARGB(255, 69, 214, 149),
+    color: Color.fromARGB(255, 69, 214, 149),
     icon: '@mipmap/sihalal_icon',
     largeIcon: DrawableResourceAndroidBitmap('@mipmap/sihalal_icon'),
     styleInformation: BigTextStyleInformation(
@@ -58,7 +59,7 @@ Future<void> showTandonPenuhNotification() async {
         // ongoing: true, // Notifikasi tidak bisa dihapus.
         // autoCancel: false, // Mencegah notifikasi dihapus dengan tap
         ticker: 'Pengisian tandon air',
-        // color: Color.fromARGB(255, 69, 214, 149),
+        color: Color.fromARGB(255, 69, 214, 149),
         icon: '@mipmap/sihalal_icon',
         largeIcon: DrawableResourceAndroidBitmap('@mipmap/sihalal_icon'),
         styleInformation: BigTextStyleInformation(

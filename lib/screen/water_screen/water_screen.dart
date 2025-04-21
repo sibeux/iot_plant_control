@@ -14,28 +14,57 @@ class WaterScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Color(0xfff7f7f7),
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         surfaceTintColor: Colors.transparent,
-        elevation: 0,
-        toolbarHeight: 80.h,
+        titleSpacing: 0,
+        title: Padding(
+          padding: EdgeInsets.only(left: 20.w),
+          child: Text('Watering Schedule'),
+        ),
+        titleTextStyle: TextStyle(
+          color: Colors.black,
+          fontSize: 18.sp,
+          fontWeight: FontWeight.w500,
+        ),
       ),
       body: Column(
         children: [
+          Divider(height: 0.4.h, thickness: 0.4.h),
+          SizedBox(height: 30.h),
           Expanded(
             child: Obx(
-              () => ListView.builder(
-                itemCount: waterController.waterTime.length,
-                itemBuilder: (context, index) {
-                  final water = waterController.waterTime[index];
-                  return Container(
-                    margin: EdgeInsets.only(bottom: 15.h),
-                    child: WaterTile(
-                      waterTime: water,
-                      // onDelete: () => waterController.removeWatering(index),
-                    ),
-                  );
-                },
-              ),
+              () =>
+                  waterController.waterTime.isNotEmpty
+                      ? ListView.builder(
+                        itemCount: waterController.waterTime.length,
+                        itemBuilder: (context, index) {
+                          final water = waterController.waterTime[index];
+                          return Container(
+                            margin: EdgeInsets.only(bottom: 15.h),
+                            child: WaterTile(waterTime: water),
+                          );
+                        },
+                      )
+                      : Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Opacity(
+                            opacity: 0.7,
+                            child: Image.asset(
+                              'assets/img/icon/watering.png',
+                              width: 160.w,
+                              height: 160.h,
+                            ),
+                          ),
+                          Text(
+                            'No watering schedule yet',
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              color: Colors.black54,
+                            ),
+                          ),
+                        ],
+                      ),
             ),
           ),
           Container(
