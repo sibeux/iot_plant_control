@@ -1,12 +1,26 @@
 import 'dart:convert';
+import 'dart:isolate';
 
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:iot_plant_control/controller/mqtt/mqtt_controller.dart';
 import 'package:iot_plant_control/models/water_time.dart';
 import 'package:iot_plant_control/components/toast.dart';
+import 'package:iot_plant_control/widgets/refill_tandon_widget/refill_notification.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+// Untuk watering alarm.
+// Be sure to annotate your callback function to avoid issues in release mode on Flutter >= 3.3.0
+@pragma('vm:entry-point')
+void startWatering() async {
+  final DateTime now = DateTime.now();
+  final int isolateId = Isolate.current.hashCode;
+  print("[$now] Hello, world! isolate=$isolateId function='$startWatering'");
+  debugPrint('Alarm triggered at ${DateTime.now()}');
+  showTandonPenuhNotification();
+}
 
 class WaterController extends GetxController {
   var waterTime = RxList<WaterTime>([]);
@@ -78,6 +92,22 @@ class WaterController extends GetxController {
     await saveWaterTimes(waterTime);
   }
 
+  void setAlarm({required id}) async {
+    print('setAlarm: $id');
+    final now = DateTime.now();
+    final alarmTime = now.add(const Duration(seconds: 10)); // contoh test
+
+    await AndroidAlarmManager.oneShotAt(
+      alarmTime,
+      1, // alarm ID
+      startWatering,
+      alarmClock: true,
+      exact: true,
+      wakeup: true,
+      rescheduleOnReboot: true,
+    );
+  }
+
   Future<void> toggleWatering(String id, bool value) async {
     int index = waterTime.indexWhere((element) => element.id == id);
     if (index != -1) {
@@ -90,6 +120,7 @@ class WaterController extends GetxController {
           int.parse(waterTime[index].time.split(':')[1]),
         ),
       );
+      setAlarm(id: id);
     }
     await saveWaterTimes(waterTime);
   }

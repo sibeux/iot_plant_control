@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:iot_plant_control/controller/refill_tandon_controller.dart';
@@ -6,10 +9,13 @@ import 'package:mqtt_client/mqtt_server_client.dart';
 
 class MqttController extends GetxController {
   late MqttServerClient client;
-  final topic = 'greenhouse/ph';
-  var phValue = 0.obs;
-  var temperatureValue = 0.obs;
+  final topic = 'sensor/data';
+  var phValue = 0.0.obs;
+  var temperatureValue = 0.0.obs;
+  var tdsValue = 0.obs;
   var mqttIsConnected = false.obs;
+
+  // inishuhy:12
 
   @override
   void onInit() {
@@ -19,19 +25,31 @@ class MqttController extends GetxController {
 
   Future<void> connectToBroker() async {
     client = MqttServerClient(
-      'broker.emqx.io',
+      '93c7b248760e45e5ab871d4e242c90a0.s1.eu.hivemq.cloud',
       'flutter_client_${DateTime.now().millisecondsSinceEpoch}',
     );
-    client.port = 1883;
+    client.port = 8883;
+    // client.port = 1883;
     client.keepAlivePeriod = 20;
     client.logging(on: false);
     client.onConnected = onConnected;
     client.onDisconnected = onDisconnected;
+    // Untuk hivemq.cloud.
+    client.secure = true;
+    client.setProtocolV311();
+    client.securityContext = SecurityContext.defaultContext;
+    client.clientIdentifier;
 
     final connMessage = MqttConnectMessage()
         .withClientIdentifier(
           'flutter_client_${DateTime.now().millisecondsSinceEpoch}',
         )
+        //
+        .authenticateAs(
+          'hivemq.webclient.1745326924275',
+          'qpG3>cHh70?b1JsTV@U#',
+        )
+        //
         .startClean()
         .withWillQos(MqttQos.atMostOnce);
     client.connectionMessage = connMessage;
@@ -51,22 +69,29 @@ class MqttController extends GetxController {
         recMess.payload.message,
       );
 
-      if (payload.contains(',temp:')) {
+      if (payload.contains('suhu') &&
+          payload.contains('tds') &&
+          payload.contains('ph')) {
         if (kDebugMode) {
           print('📥 Received on $topic: $payload From Sensor!');
         }
-        // contoh payload: ph:12,temp:32
-        final parts = payload.split(',');
-        Map<String, String> data = {};
+        // {"suhu":27.00,"tds":0.00,"ph":11.55}
+        try {
+          final jsonData = jsonDecode(payload);
 
-        for (var part in parts) {
-          var kv = part.split(':');
-          if (kv.length == 2) {
-            data[kv[0].trim()] = kv[1].trim();
+          // Pastikan value defaultnya tetap aman jika null atau error
+          phValue.value = double.parse(
+            (jsonData['ph'] ?? 0).toDouble().toStringAsFixed(1),
+          );
+          temperatureValue.value = double.parse(
+            (jsonData['suhu'] ?? 0).toDouble().toStringAsFixed(1),
+          );
+          tdsValue.value = (jsonData['tds'] ?? 0).toDouble().round();
+        } catch (e) {
+          if (kDebugMode) {
+            print('⚠️ Error parsing payload: $e');
           }
         }
-        phValue.value = int.parse(data['ph'] ?? '0');
-        temperatureValue.value = int.parse(data['temp'] ?? '0');
       } else if (payload.contains('tandonairsudahpenuh')) {
         if (kDebugMode) {
           print('📥 Received on $topic: $payload at ${DateTime.now()}');

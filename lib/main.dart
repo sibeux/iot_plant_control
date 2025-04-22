@@ -1,3 +1,4 @@
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -22,6 +23,8 @@ void main() async {
 
   // await initServiceExample();
   await initRefillService();
+  // For Android Alarm Manager.
+  await AndroidAlarmManager.initialize();
 
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(

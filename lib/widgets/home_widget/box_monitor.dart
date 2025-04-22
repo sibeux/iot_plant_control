@@ -113,7 +113,7 @@ class BoxMonitor extends StatelessWidget {
                         id: 3,
                         title: 'PPM',
                         status: 'Good',
-                        value: '${mqttController.phValue.value}',
+                        value: '${mqttController.tdsValue.value}',
                       ),
                     ),
                   ),
