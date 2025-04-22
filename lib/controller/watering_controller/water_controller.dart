@@ -65,7 +65,9 @@ class WaterController extends GetxController {
   Future<void> addWatering() async {
     final prefs = await SharedPreferences.getInstance();
     final String id =
-        (int.parse(prefs.getString('water_id') ?? '0') + 1).toString();
+        waterTime.isEmpty
+            ? '1'
+            : (int.parse(prefs.getString('water_id') ?? '0') + 1).toString();
     String time =
         '${selectedHour.value.toString().padLeft(2, '0')}:${selectedMinute.value.toString().padLeft(2, '0')}';
     waterTime.add(

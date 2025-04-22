@@ -15,7 +15,7 @@ class ButtonMix extends StatelessWidget {
     return ElevatedButton(
       onPressed: () async {
         mqttController.publishToBroker(
-          'TDS: ${tdsController.tdsValue.value.toStringAsFixed(0)}',
+          'MIXTDS: ${tdsController.tdsValue.value.toStringAsFixed(0)}',
         );
         await tdsController.saveTdsValue();
       },
