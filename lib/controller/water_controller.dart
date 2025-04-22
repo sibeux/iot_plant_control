@@ -1,28 +1,15 @@
 import 'dart:convert';
-import 'dart:isolate';
 
-import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:iot_plant_control/controller/mqtt/mqtt_controller.dart';
+import 'package:iot_plant_control/controller/water_alarm_controller.dart';
 import 'package:iot_plant_control/models/water_time.dart';
 import 'package:iot_plant_control/components/toast.dart';
-import 'package:iot_plant_control/widgets/refill_tandon_widget/refill_notification.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-// Untuk watering alarm.
-// Be sure to annotate your callback function to avoid issues in release mode on Flutter >= 3.3.0
-@pragma('vm:entry-point')
-void startWatering() async {
-  final DateTime now = DateTime.now();
-  final int isolateId = Isolate.current.hashCode;
-  print("[$now] Hello, world! isolate=$isolateId function='$startWatering'");
-  debugPrint('Alarm triggered at ${DateTime.now()}');
-  showTandonPenuhNotification();
-}
-
 class WaterController extends GetxController {
+  final waterAlarmController = Get.put(WaterAlarmController());
   var waterTime = RxList<WaterTime>([]);
 
   late FixedExtentScrollController hourController;
@@ -76,13 +63,22 @@ class WaterController extends GetxController {
   }
 
   Future<void> addWatering() async {
+    final prefs = await SharedPreferences.getInstance();
+    final String id =
+        (int.parse(prefs.getString('water_id') ?? '0') + 1).toString();
     String time =
         '${selectedHour.value.toString().padLeft(2, '0')}:${selectedMinute.value.toString().padLeft(2, '0')}';
     waterTime.add(
-      WaterTime(time: time, duration: selectedDuration.value, isActive: true),
+      WaterTime(
+        id: id,
+        time: time,
+        duration: selectedDuration.value,
+        isActive: true,
+      ),
     );
     showToast(countdownString.value);
     sortWaterTime();
+    await prefs.setString('water_id', id);
     await saveWaterTimes(waterTime);
   }
 
@@ -92,20 +88,19 @@ class WaterController extends GetxController {
     await saveWaterTimes(waterTime);
   }
 
-  void setAlarm({required id}) async {
-    print('setAlarm: $id');
-    final now = DateTime.now();
-    final alarmTime = now.add(const Duration(seconds: 10)); // contoh test
+  DateTime convertStringToDateTime(String time) {
+    // Ambil tanggal hari ini
+    DateTime now = DateTime.now();
 
-    await AndroidAlarmManager.oneShotAt(
-      alarmTime,
-      1, // alarm ID
-      startWatering,
-      alarmClock: true,
-      exact: true,
-      wakeup: true,
-      rescheduleOnReboot: true,
-    );
+    // Pisahkan waktu dari string "HH:mm"
+    List<String> timeParts = time.split(':');
+    int hours = int.parse(timeParts[0]);
+    int minutes = int.parse(timeParts[1]);
+
+    // Gabungkan tanggal hari ini dengan waktu yang diberikan
+    DateTime dateTime = DateTime(now.year, now.month, now.day, hours, minutes);
+
+    return dateTime;
   }
 
   Future<void> toggleWatering(String id, bool value) async {
@@ -120,7 +115,11 @@ class WaterController extends GetxController {
           int.parse(waterTime[index].time.split(':')[1]),
         ),
       );
-      setAlarm(id: id);
+      print('Alarm set for ${waterTime[index].time}');
+      waterAlarmController.setAlarm(
+        id: id,
+        alarmTime: convertStringToDateTime(waterTime[index].time),
+      );
     }
     await saveWaterTimes(waterTime);
   }
@@ -171,14 +170,16 @@ class WaterController extends GetxController {
   }
 
   Future<void> saveWaterTimes(RxList<WaterTime> list) async {
-    final mqttController = Get.find<MqttController>();
+    // final mqttController = Get.find<MqttController>();
     final prefs = await SharedPreferences.getInstance();
 
     final List<Map<String, dynamic>> mapList =
         list.map((item) => item.toJson()).toList();
 
     final String jsonPayload = jsonEncode(mapList);
-    mqttController.publishToBroker(jsonPayload);
+    // mqttController.publishToBroker(jsonPayload);
+
+    debugPrint('jsonPayload: $jsonPayload');
 
     // Untuk local storage tetap simpan sebagai List<String>
     final List<String> jsonListForPrefs =

@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:iot_plant_control/screen/home_screen/home_screen.dart';
 import 'package:iot_plant_control/screen/refill_screen/refill_tandon_screen.dart';
 import 'package:iot_plant_control/screen/water_screen/water_screen.dart';
-import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 
 class PersistentBarController extends GetxController {
   late PersistentTabController controller;
@@ -16,41 +16,42 @@ class PersistentBarController extends GetxController {
     controller = PersistentTabController(initialIndex: 0);
   }
 
-  PersistentBottomNavBarItem buttonNavBar({
+  PersistentTabConfig buttonNavBar({
+    required Widget screen,
     required String title,
     required IconData iconActive,
     required IconData iconInactive,
   }) {
-    return PersistentBottomNavBarItem(
-      icon: Icon(iconActive),
-      inactiveIcon: Icon(iconInactive),
-      title: title,
-      contentPadding: 0.sp,
-      iconSize: 20.sp,
-      activeColorPrimary: Color.fromARGB(255, 69, 214, 149),
-      inactiveColorPrimary: Colors.black.withAlpha(100),
+    return PersistentTabConfig(
+      screen: screen,
+      item: ItemConfig(
+        icon: Icon(iconActive),
+        inactiveIcon: Icon(iconInactive),
+        title: title,
+        iconSize: 20.sp,
+        activeForegroundColor: Color.fromARGB(255, 69, 214, 149),
+        inactiveForegroundColor: Colors.black.withAlpha(100),
+      ),
     );
   }
 
-  // Daftar halaman untuk tiap tab
-  List<Widget> buildScreens() {
-    return [HomeScreen(), WaterScreen(), RefillTandonScreen()];
-  }
-
   // Item navigasi untuk tiap tab
-  List<PersistentBottomNavBarItem> navBarsItems() {
+  List<PersistentTabConfig> navBarsItems() {
     return [
       buttonNavBar(
+        screen: HomeScreen(),
         title: 'Home',
         iconActive: Icons.home,
         iconInactive: Icons.home_outlined,
       ),
       buttonNavBar(
+        screen: WaterScreen(),
         title: 'Water',
         iconActive: Icons.grass_rounded,
         iconInactive: Icons.grass_outlined,
       ),
       buttonNavBar(
+        screen: RefillTandonScreen(),
         title: 'Refill',
         iconActive: Icons.water_drop_rounded,
         iconInactive: Icons.water_drop_outlined,

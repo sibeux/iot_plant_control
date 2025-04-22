@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:uuid/uuid.dart';
+// import 'package:uuid/uuid.dart';
 
 class WaterTime {
   final String id;
@@ -8,12 +8,12 @@ class WaterTime {
   RxBool isActive;
 
   WaterTime({
-    String? id,
+    required this.id,
     required this.time,
     required this.duration,
     bool isActive = false,
-  }) : id = id ?? const Uuid().v4(),
-      isActive = isActive.obs;
+    // }) : id = id ?? const Uuid().v4(),
+  }) : isActive = isActive.obs;
 
   factory WaterTime.fromJson(Map<String, dynamic> json) => WaterTime(
     id: json['id'],
