@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:iot_plant_control/controller/water_controller.dart';
+import 'package:iot_plant_control/controller/watering_controller/water_controller.dart';
 import 'package:iot_plant_control/screen/water_screen/add_water_screen.dart';
 import 'package:iot_plant_control/widgets/water_widget/water_listtile.dart';
 

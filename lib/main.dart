@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:iot_plant_control/controller/mqtt/mqtt_controller.dart';
 import 'package:iot_plant_control/controller/refill_tandon_controller.dart';
-import 'package:iot_plant_control/controller/water_controller.dart';
+import 'package:iot_plant_control/controller/watering_controller/water_controller.dart';
 import 'package:iot_plant_control/screen/splash_screen.dart';
 // import 'package:iot_plant_control/services/example_background_service.dart';
 import 'package:iot_plant_control/services/refill_service.dart';

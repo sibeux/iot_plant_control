@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:iot_plant_control/controller/water_alarm_controller.dart';
+import 'package:iot_plant_control/controller/watering_controller/water_alarm_controller.dart';
 import 'package:iot_plant_control/models/water_time.dart';
 import 'package:iot_plant_control/components/toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';

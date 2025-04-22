@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:iot_plant_control/controller/water_controller.dart';
+import 'package:iot_plant_control/controller/watering_controller/water_controller.dart';
 
 class TimePickerChange extends StatelessWidget {
   const TimePickerChange({

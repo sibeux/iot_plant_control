@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:iot_plant_control/controller/water_controller.dart';
+import 'package:iot_plant_control/controller/watering_controller/water_controller.dart';
 import 'package:iot_plant_control/widgets/water_widget/add_water_widget/insert_duration.dart';
 import 'package:iot_plant_control/widgets/water_widget/add_water_widget/time_picker.dart';
 

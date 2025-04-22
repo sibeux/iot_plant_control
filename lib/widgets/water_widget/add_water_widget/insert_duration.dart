@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:iot_plant_control/controller/water_controller.dart';
+import 'package:iot_plant_control/controller/watering_controller/water_controller.dart';
 import 'package:iot_plant_control/widgets/water_widget/add_water_widget/add_duration_modal/add_duration_modal.dart';
 
 class InsertDuration extends StatelessWidget {
