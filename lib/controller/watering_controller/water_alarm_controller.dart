@@ -75,8 +75,8 @@ void startWatering() async {
       }
     });
 
-    int durationSeconds = duration.inSeconds;
-    int remaining = durationSeconds;
+    // int durationSeconds = duration.inSeconds;
+    // int remaining = durationSeconds;
 
     final receivePort = ReceivePort();
     IsolateNameServer.registerPortWithName(
