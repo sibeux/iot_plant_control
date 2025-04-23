@@ -16,7 +16,7 @@ class ImageCarousel extends StatelessWidget {
           height: 200.h,
           clipBehavior: Clip.antiAlias,
           decoration: BoxDecoration(
-            color: Colors.red.withAlpha(100),
+            color: Colors.black,
             borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(30.r),
               bottomRight: Radius.circular(30.r),
@@ -32,7 +32,6 @@ class ImageCarousel extends StatelessWidget {
               return Image.asset(
                 'assets/img/plant/${index + 1}.png',
                 fit: BoxFit.cover,
-                width: double.infinity,
                 height: 200.h,
                 filterQuality: FilterQuality.high,
               );
