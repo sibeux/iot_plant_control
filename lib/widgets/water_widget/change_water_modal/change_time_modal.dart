@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:iot_plant_control/controller/watering_controller/check_overlapping.dart';
 import 'package:iot_plant_control/controller/watering_controller/water_controller.dart';
 import 'package:iot_plant_control/models/water_time.dart';
 import 'package:iot_plant_control/widgets/water_widget/change_water_modal/button_confirm.dart';
@@ -46,20 +47,38 @@ void changeTimeModal(BuildContext context, {required WaterTime waterTime}) {
     },
   ).then((value) {
     if (value == true) {
+      bool isConflict = false;
+      // Jika ada durasi/waktu yang diubah.
       if (defaultTime !=
               '${waterController.selectedHour.value.toString().padLeft(2, '0')}:${waterController.selectedMinute.value.toString().padLeft(2, '0')}' ||
           (defaultDuration != waterController.selectedDuration.value &&
               waterController.durationController.text.isNotEmpty)) {
+        final String time =
+            '${waterController.selectedHour.value.toString().padLeft(2, '0')}:${waterController.selectedMinute.value.toString().padLeft(2, '0')}';
+        isConflict = checkOverlapping(
+          id: waterTime.id,
+          newStart: DateTime.parse(
+            '2023-01-01 $time:00',
+          ), // Gunakan tanggal acak untuk waktu mulai
+          newDuration: Duration(
+            minutes: int.parse(
+              waterController.durationController.text.isEmpty
+                  ? defaultDuration
+                  : waterController.selectedDuration.value,
+            ),
+          ),
+          listAlarm: waterController.waterTime,
+        );
         waterController.updateWatering(
           id: waterTime.id,
-          time:
-              '${waterController.selectedHour.value.toString().padLeft(2, '0')}:${waterController.selectedMinute.value.toString().padLeft(2, '0')}',
+          time: time,
           duration:
               waterController.durationController.text.isEmpty
                   ? defaultDuration
                   : waterController.selectedDuration.value,
+          isConflict: isConflict,
         );
-        if (defaultToggle == false) {
+        if (defaultToggle == false && !isConflict) {
           waterController.toggleWatering(waterTime.id, true);
         } else {
           waterController.toggleWatering(
@@ -68,6 +87,11 @@ void changeTimeModal(BuildContext context, {required WaterTime waterTime}) {
           );
         }
       } else if (defaultToggle != waterTime.isActive.value) {
+        // Toggle di sini berfungsi hanya untuk memanggil toast.
+        if (waterTime.isConflict.value) {
+          waterController.toggleWatering(waterTime.id, false);
+          return;
+        }
         waterController.toggleWatering(waterTime.id, waterTime.isActive.value);
       }
     } else {

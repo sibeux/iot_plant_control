@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:iot_plant_control/controller/watering_controller/add_water_controller.dart';
 import 'package:iot_plant_control/controller/watering_controller/water_controller.dart';
 import 'package:iot_plant_control/widgets/water_widget/add_water_widget/insert_duration.dart';
 import 'package:iot_plant_control/widgets/water_widget/add_water_widget/time_picker.dart';
@@ -11,6 +12,7 @@ class AddWaterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final waterController = Get.find<WaterController>();
+    final addWaterController = Get.put(AddWaterController());
     waterController.setCurrentTime();
     waterController.selectedDuration.value = '2';
     return Scaffold(
@@ -51,7 +53,7 @@ class AddWaterScreen extends StatelessWidget {
               icon: const Icon(Icons.check),
               onPressed: () {
                 Get.back();
-                waterController.addWatering();
+                addWaterController.addWatering();
               },
             ),
           ),

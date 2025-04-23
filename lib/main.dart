@@ -10,6 +10,7 @@ import 'package:iot_plant_control/controller/watering_controller/water_controlle
 import 'package:iot_plant_control/screen/splash_screen.dart';
 // import 'package:iot_plant_control/services/example_background_service.dart';
 import 'package:iot_plant_control/services/refill_service.dart';
+import 'package:get_storage/get_storage.dart';
 
 void main() async {
   // Dibutuhkan setpreferredOrientations.
@@ -23,7 +24,7 @@ void main() async {
 
   // await initServiceExample();
   await initRefillService();
-  // For Android Alarm Manager.
+  await GetStorage.init();
   await AndroidAlarmManager.initialize();
 
   SystemChrome.setSystemUIOverlayStyle(

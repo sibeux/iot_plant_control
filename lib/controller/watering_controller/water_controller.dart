@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:iot_plant_control/controller/watering_controller/check_overlapping.dart';
 import 'package:iot_plant_control/controller/watering_controller/water_alarm_controller.dart';
 import 'package:iot_plant_control/models/water_time.dart';
 import 'package:iot_plant_control/components/toast.dart';
@@ -11,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class WaterController extends GetxController {
   final waterAlarmController = Get.put(WaterAlarmController());
   var waterTime = RxList<WaterTime>([]);
+  var conflictWaterTimeId = RxList<String>([]);
 
   late FixedExtentScrollController hourController;
   late FixedExtentScrollController minuteController;
@@ -62,31 +64,11 @@ class WaterController extends GetxController {
     setWaterTimeDifference(selectedHour.value, selectedMinute.value);
   }
 
-  Future<void> addWatering() async {
-    final prefs = await SharedPreferences.getInstance();
-    final String id =
-        waterTime.isEmpty
-            ? '1'
-            : (int.parse(prefs.getString('water_id') ?? '0') + 1).toString();
-    String time =
-        '${selectedHour.value.toString().padLeft(2, '0')}:${selectedMinute.value.toString().padLeft(2, '0')}';
-    waterTime.add(
-      WaterTime(
-        id: id,
-        time: time,
-        duration: selectedDuration.value,
-        isActive: true,
-      ),
-    );
-    showToast(countdownString.value);
-    sortWaterTime();
-    await prefs.setString('water_id', id);
-    await saveWaterTimes(waterTime);
-  }
-
   Future<void> removeWatering(String id) async {
     int index = waterTime.indexWhere((element) => element.id == id);
+    waterAlarmController.cancelAlarm(id: id);
     waterTime.removeAt(index);
+    validateSortedAlarms(waterTime);
     await saveWaterTimes(waterTime);
   }
 
@@ -107,6 +89,11 @@ class WaterController extends GetxController {
 
   Future<void> toggleWatering(String id, bool value) async {
     int index = waterTime.indexWhere((element) => element.id == id);
+    DateTime waterDate = convertStringToDateTime(waterTime[index].time);
+    // Jika waktu sudah lewat hari ini, set ke besok
+    if (waterDate.isBefore(DateTime.now())) {
+      waterDate = waterDate.add(const Duration(days: 1));
+    }
     if (index != -1) {
       waterTime[index].isActive.value = value;
     }
@@ -117,11 +104,9 @@ class WaterController extends GetxController {
           int.parse(waterTime[index].time.split(':')[1]),
         ),
       );
-      print('Alarm set for ${waterTime[index].time}');
-      waterAlarmController.setAlarm(
-        id: id,
-        alarmTime: convertStringToDateTime(waterTime[index].time),
-      );
+      waterAlarmController.setAlarm(id: id, alarmTime: waterDate);
+    } else {
+      waterAlarmController.cancelAlarm(id: id);
     }
     await saveWaterTimes(waterTime);
   }
@@ -130,11 +115,14 @@ class WaterController extends GetxController {
     required String id,
     required String time,
     required String duration,
+    bool isConflict = false,
   }) {
     int index = waterTime.indexWhere((element) => element.id == id);
     if (index != -1) {
       waterTime[index].time = time;
       waterTime[index].duration = duration;
+      waterTime[index].isActive.value = !isConflict;
+      waterTime[index].isConflict.value = isConflict;
     }
     sortWaterTime();
     updateRefresh.value = !updateRefresh.value;

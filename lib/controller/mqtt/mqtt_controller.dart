@@ -25,7 +25,7 @@ class MqttController extends GetxController {
 
   Future<void> connectToBroker() async {
     client = MqttServerClient(
-      '93c7b248760e45e5ab871d4e242c90a0.s1.eu.hivemq.cloud',
+      '0ec5706baec94b42b8a69d4a86aaa482.s1.eu.hivemq.cloud',
       'flutter_client_${DateTime.now().millisecondsSinceEpoch}',
     );
     client.port = 8883;
@@ -44,12 +44,12 @@ class MqttController extends GetxController {
         .withClientIdentifier(
           'flutter_client_${DateTime.now().millisecondsSinceEpoch}',
         )
-        //
+        // ⬇️ khusus untuk eu.hivemq.cloud
         .authenticateAs(
-          'hivemq.webclient.1745326924275',
-          'qpG3>cHh70?b1JsTV@U#',
+          'hivemq.webclient.1745338710891',
+          '9@2;P?0*w3jqNXCTIeaf',
         )
-        //
+        // ⬆️ khusus untuk eu.hivemq.cloud
         .startClean()
         .withWillQos(MqttQos.atMostOnce);
     client.connectionMessage = connMessage;
