@@ -94,6 +94,7 @@ void changeTimeModal(BuildContext context, {required WaterTime waterTime}) {
         }
         waterController.toggleWatering(waterTime.id, waterTime.isActive.value);
       }
+      validateSortedAlarms(waterController.waterTime);
     } else {
       if (defaultToggle != waterTime.isActive.value) {
         waterController.toggleWatering(waterTime.id, defaultToggle);
