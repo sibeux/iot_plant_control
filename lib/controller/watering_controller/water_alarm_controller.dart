@@ -167,6 +167,7 @@ void stopWatering() async {
     debugPrint(
       'Alarm on again set for id: ${items[index].id} at tomorrow: $waterDate',
     );
+    box.remove('current_ring');
   }
 }
 
