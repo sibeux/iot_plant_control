@@ -7,7 +7,6 @@ class WaterTime {
   String duration;
   RxBool isActive;
   RxBool isConflict;
-  RxBool isRing;
 
   WaterTime({
     required this.id,
@@ -18,8 +17,7 @@ class WaterTime {
     bool isRing = false,
     // }) : id = id ?? const Uuid().v4(),
   }) : isActive = isActive.obs,
-       isConflict = isConflict.obs,
-       isRing = isRing.obs;
+       isConflict = isConflict.obs;
 
   factory WaterTime.fromJson(Map<String, dynamic> json) => WaterTime(
     id: json['id'],
@@ -27,7 +25,6 @@ class WaterTime {
     duration: json['duration'] ?? '2',
     isActive: json['isActive'] ?? false,
     isConflict: json['isConflict'] ?? false,
-    isRing: json['isRing'] ?? false,
   );
 
   Map<String, dynamic> toJson() => {
@@ -36,6 +33,5 @@ class WaterTime {
     'duration': duration,
     'isActive': isActive.value,
     'isConflict': isConflict.value,
-    'isRing': isRing.value,
   };
 }

@@ -33,8 +33,8 @@ Future<void> showWateringNotification(bool isStart) async {
 
   await FlutterLocalNotificationsPlugin().show(
     0,
-    'Penyiraman Dimulai',
-    'Tanaman Anda sedang disiram.',
+    isStart ? 'Penyiraman Dimulai' : 'Penyiraman Selesai',
+    isStart ? 'Tanaman Anda sedang disiram.' : 'Penyiraman telah selesai.',
     notificationDetails,
   );
 }

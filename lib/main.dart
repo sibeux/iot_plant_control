@@ -1,3 +1,6 @@
+import 'dart:isolate';
+import 'dart:ui';
+
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,6 +14,9 @@ import 'package:iot_plant_control/screen/splash_screen.dart';
 // import 'package:iot_plant_control/services/example_background_service.dart';
 import 'package:iot_plant_control/services/refill_service.dart';
 import 'package:get_storage/get_storage.dart';
+
+final ReceivePort port = ReceivePort();
+const String isolateName = 'water_alarm_port';
 
 void main() async {
   // Dibutuhkan setpreferredOrientations.
@@ -26,6 +32,22 @@ void main() async {
   await initRefillService();
   await GetStorage.init();
   await AndroidAlarmManager.initialize();
+
+  // For alarm manager.
+  // Register the UI isolate's SendPort to allow for communication from the
+  // background isolate.
+  IsolateNameServer.registerPortWithName(port.sendPort, isolateName);
+
+  port.listen((message) {
+    if (message is String) {
+      Get.find<WaterController>().isWaterOn.value = true;
+      Get.find<WaterController>().timeNotifier.value = message.toString();
+      if (message == 'done'){
+        Get.find<WaterController>().isWaterOn.value = false;
+      }
+    } 
+  });
+  // Sampai Sini.
 
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(

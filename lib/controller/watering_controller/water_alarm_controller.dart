@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:isolate';
+import 'dart:ui';
 
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +14,11 @@ import 'package:iot_plant_control/controller/watering_controller/water_controlle
 import 'package:iot_plant_control/models/water_time.dart';
 import 'package:iot_plant_control/widgets/water_widget/watering_notification.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+// The background
+SendPort? sendPort;
+// Global supaya bisa diakses saat stop
+Timer? countdownTimer;
 
 // Be sure to annotate your callback function to avoid issues in release mode on Flutter >= 3.3.0
 // Harus di luar class/widget.
@@ -36,8 +43,6 @@ void startWatering() async {
   final List<String>? jsonList = prefs.getStringList('water_times');
   final String hhmm = DateFormat('HH:mm').format(now);
 
-  print(jsonList);
-
   if (jsonList != null) {
     final items =
         jsonList.map((e) => WaterTime.fromJson(jsonDecode(e))).toList();
@@ -46,7 +51,6 @@ void startWatering() async {
           element.isConflict.value == false &&
           element.isActive.value == true;
     });
-    print(index);
     final duration = Duration(minutes: int.parse(items[index].duration));
 
     box.write('current_ring', items[index].id);
@@ -70,6 +74,44 @@ void startWatering() async {
         timer.cancel();
       }
     });
+
+    int durationSeconds = duration.inSeconds;
+    int remaining = durationSeconds;
+
+    final receivePort = ReceivePort();
+    IsolateNameServer.registerPortWithName(
+      receivePort.sendPort,
+      'water_alarm_receive_port',
+    );
+
+    receivePort.listen((message) {
+      if (message == 'stop') {
+        countdownTimer?.cancel();
+        sendPort!.send('done');
+        debugPrint('Timer dihentikan oleh UI');
+      }
+    });
+
+    // This will be null if we're running in the background.
+    sendPort ??= IsolateNameServer.lookupPortByName("water_alarm_port");
+    sendPort?.send(null);
+
+    // countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    //   final int minutes = remaining ~/ 60;
+    //   final int seconds = remaining % 60;
+    //   final formatted =
+    //       '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+    //   sendPort!.send(formatted);
+
+    //   if (remaining == 0) {
+    //     timer.cancel();
+    //     sendPort!.send('done');
+    //     IsolateNameServer.removePortNameMapping('water_alarm_receive_port');
+    //   } else {
+    //     remaining--;
+    //   }
+    //   box.write('current_ring', items[index].id);
+    // });
   }
 }
 
