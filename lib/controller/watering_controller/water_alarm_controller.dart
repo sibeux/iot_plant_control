@@ -74,6 +74,9 @@ void startWatering() async {
         debugPrint(
           'Alarm off set for id: ${items[index].id} at ${now.add(duration)}',
         );
+        debugPrint(
+          'current ring from pragma (startWatering): ${box.read('current_ring')}',
+        );
         counter++;
         timer.cancel();
       }
@@ -137,7 +140,9 @@ void stopWatering() async {
     }
   });
   final List<String>? jsonList = prefs.getStringList('water_times');
-  debugPrint('current ring from pragma (stopWatering): ${box.read('current_ring')}');
+  debugPrint(
+    'current ring from pragma (stopWatering): ${box.read('current_ring')}',
+  );
   if (jsonList != null) {
     final items =
         jsonList.map((e) => WaterTime.fromJson(jsonDecode(e))).toList();
