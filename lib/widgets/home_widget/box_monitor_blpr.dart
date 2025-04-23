@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hexcolor/hexcolor.dart';
 
-class BoxMonitor extends StatelessWidget {
-  const BoxMonitor({
+class BoxMonitorBlpr extends StatelessWidget {
+  const BoxMonitorBlpr({
     super.key,
     required this.id,
     required this.title,

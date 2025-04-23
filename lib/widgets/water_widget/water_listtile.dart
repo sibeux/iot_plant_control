@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:iot_plant_control/components/toast.dart';
 import 'package:iot_plant_control/controller/clock_controller.dart';
 import 'package:iot_plant_control/models/water_time.dart';
-import 'package:iot_plant_control/widgets/water_widget/change_time_modal.dart';
+import 'package:iot_plant_control/widgets/water_widget/change_water_modal/change_time_modal.dart';
 
-import '../../controller/water_controller.dart';
+import '../../controller/watering_controller/water_controller.dart';
 
 class WaterTile extends StatelessWidget {
   const WaterTile({super.key, required this.waterTime});
@@ -162,7 +163,9 @@ class WaterTile extends StatelessWidget {
                       SizedBox(height: 5.h),
                       Obx(
                         () => Text(
-                          !waterTime.isActive.value
+                          waterTime.isConflict.value
+                              ? 'Conflict with other schedule'
+                              : !waterTime.isActive.value
                               ? 'Off'
                               : clockController.refreshTime.value ||
                                   !clockController.refreshTime.value
@@ -175,7 +178,9 @@ class WaterTile extends StatelessWidget {
                             fontSize: 13.sp,
                             fontWeight: FontWeight.w400,
                             color:
-                                waterController
+                                waterTime.isConflict.value
+                                    ? Colors.red.withAlpha(200)
+                                    : waterController
                                         .waterTime[waterController.waterTime
                                             .indexWhere(
                                               (element) =>
@@ -191,19 +196,32 @@ class WaterTile extends StatelessWidget {
                     ],
                   ),
                   Obx(
-                    () => Switch(
-                      value: waterTime.isActive.value,
-                      onChanged: (value) {
-                        waterTime.isActive.value = value;
-                        waterController.toggleWatering(
-                          waterTime.id.toString(),
-                          value,
-                        );
-                      },
-                      activeColor: Color.fromARGB(255, 69, 214, 149),
-                      inactiveTrackColor: Color(0xffD9D9D9),
-                      inactiveThumbColor: Color(0xffFFFFFF),
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    () => Opacity(
+                      opacity: waterTime.isConflict.value ? 0.5 : 1.0,
+                      child: Switch(
+                        value: waterTime.isActive.value,
+                        onChanged: (value) {
+                          if (waterTime.isConflict.value) {
+                            showToast(
+                              'Conflict with other schedule. Please change the time',
+                            );
+                            return;
+                          }
+                          // Kalau ada return di atas, maka tidak akan lanjut ke bawah.
+                          waterTime.isActive.value = value;
+                          waterController.toggleWatering(
+                            waterTime.id.toString(),
+                            value,
+                          );
+                        },
+                        activeColor: Color.fromARGB(255, 69, 214, 149),
+                        inactiveTrackColor:
+                            waterTime.isConflict.value
+                                ? Colors.red.withAlpha(100)
+                                : Color(0xffD9D9D9),
+                        inactiveThumbColor: Color(0xffFFFFFF),
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
                     ),
                   ),
                 ],

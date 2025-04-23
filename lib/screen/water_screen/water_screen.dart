@@ -1,41 +1,104 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:iot_plant_control/controller/water_controller.dart';
+import 'package:iot_plant_control/controller/watering_controller/water_controller.dart';
 import 'package:iot_plant_control/screen/water_screen/add_water_screen.dart';
-import 'package:iot_plant_control/widgets/water_widget/water_tile.dart';
+import 'package:iot_plant_control/widgets/water_widget/water_listtile.dart';
 
 class WaterScreen extends StatelessWidget {
   const WaterScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final waterController = Get.put(WaterController());
+    final waterController = Get.find<WaterController>();
     return Scaffold(
       backgroundColor: Color(0xfff7f7f7),
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         surfaceTintColor: Colors.transparent,
-        elevation: 0,
-        toolbarHeight: 80.h,
+        titleSpacing: 0,
+        title: Padding(
+          padding: EdgeInsets.only(left: 20.w),
+          child: Text('Watering Schedule'),
+        ),
+        titleTextStyle: TextStyle(
+          color: Colors.black,
+          fontSize: 18.sp,
+          fontWeight: FontWeight.w500,
+        ),
       ),
       body: Column(
         children: [
+          Divider(height: 0.4.h, thickness: 0.4.h),
+          SizedBox(height: 10.h),
+          // Obx(
+          //   () =>
+          //       waterController.waterTime.isNotEmpty
+          //           ? Container(
+          //             padding: EdgeInsets.symmetric(
+          //               horizontal: 16.w,
+          //               vertical: 16.h,
+          //             ),
+          //             decoration: BoxDecoration(
+          //               color:
+          //                   waterController.isWaterOn.value
+          //                       ? Colors.green.shade100
+          //                       : Colors.red.shade100,
+          //               borderRadius: BorderRadius.circular(8.r),
+          //             ),
+          //             child: Obx(
+          //               () => Text(
+          //                 waterController.isWaterOn.value
+          //                     ? 'Watering: ${waterController.timeNotifier.value}'
+          //                     : 'Watering OFF',
+          //                 style: TextStyle(
+          //                   fontSize: 18.sp,
+          //                   fontWeight: FontWeight.bold,
+          //                   color:
+          //                       waterController.isWaterOn.value
+          //                           ? Colors.green.shade800
+          //                           : Colors.red.shade800,
+          //                 ),
+          //               ),
+          //             ),
+          //           )
+          //           : SizedBox(),
+          // ),
+          SizedBox(height: 10.h),
           Expanded(
             child: Obx(
-              () => ListView.builder(
-                itemCount: waterController.waterTime.length,
-                itemBuilder: (context, index) {
-                  final water = waterController.waterTime[index];
-                  return Container(
-                    margin: EdgeInsets.only(bottom: 15.h),
-                    child: WaterTile(
-                      waterTime: water,
-                      // onDelete: () => waterController.removeWatering(index),
-                    ),
-                  );
-                },
-              ),
+              () =>
+                  waterController.waterTime.isNotEmpty
+                      ? ListView.builder(
+                        itemCount: waterController.waterTime.length,
+                        itemBuilder: (context, index) {
+                          final water = waterController.waterTime[index];
+                          return Container(
+                            margin: EdgeInsets.only(bottom: 15.h),
+                            child: WaterTile(waterTime: water),
+                          );
+                        },
+                      )
+                      : Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Opacity(
+                            opacity: 0.7,
+                            child: Image.asset(
+                              'assets/img/icon/watering.png',
+                              width: 160.w,
+                              height: 160.h,
+                            ),
+                          ),
+                          Text(
+                            'No watering schedule yet',
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              color: Colors.black54,
+                            ),
+                          ),
+                        ],
+                      ),
             ),
           ),
           Container(
