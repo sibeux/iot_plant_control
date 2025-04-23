@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:iot_plant_control/controller/mqtt/mqtt_controller.dart';
 import 'package:iot_plant_control/controller/refill_tandon_controller.dart';
+import 'package:iot_plant_control/controller/watering_controller/permission_controller.dart';
 import 'package:iot_plant_control/controller/watering_controller/water_controller.dart';
 import 'package:iot_plant_control/screen/splash_screen.dart';
 // import 'package:iot_plant_control/services/example_background_service.dart';
@@ -27,11 +28,13 @@ void main() async {
   Get.put(MqttController());
   Get.put(RefillTandonController());
   Get.put(WaterController());
+  final permissionController = Get.put(PermissionController());
 
   // await initServiceExample();
   await initRefillService();
   await GetStorage.init();
   await AndroidAlarmManager.initialize();
+  await permissionController.requestExactAlarmPermission();
 
   // For alarm manager.
   // Register the UI isolate's SendPort to allow for communication from the
