@@ -15,8 +15,6 @@ class MqttController extends GetxController {
   var tdsValue = 0.obs;
   var mqttIsConnected = false.obs;
 
-  // inishuhy:12
-
   @override
   void onInit() {
     super.onInit();
@@ -26,6 +24,7 @@ class MqttController extends GetxController {
   Future<void> connectToBroker() async {
     client = MqttServerClient(
       '0ec5706baec94b42b8a69d4a86aaa482.s1.eu.hivemq.cloud',
+      // 'broker.emqx.io',
       'flutter_client_${DateTime.now().millisecondsSinceEpoch}',
     );
     client.port = 8883;
@@ -36,9 +35,9 @@ class MqttController extends GetxController {
     client.onDisconnected = onDisconnected;
     // Untuk hivemq.cloud.
     client.secure = true;
-    client.setProtocolV311();
     client.securityContext = SecurityContext.defaultContext;
-    client.clientIdentifier;
+    // client.setProtocolV311();
+    // client.clientIdentifier;
 
     final connMessage = MqttConnectMessage()
         .withClientIdentifier(

@@ -14,6 +14,7 @@ class WaterTime {
     required this.duration,
     bool isActive = false,
     bool isConflict = false,
+    bool isRing = false,
     // }) : id = id ?? const Uuid().v4(),
   }) : isActive = isActive.obs,
        isConflict = isConflict.obs;
