@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:iot_plant_control/components/string_formatter.dart';
 import 'package:iot_plant_control/controller/watering_controller/check_overlapping.dart';
 import 'package:iot_plant_control/controller/watering_controller/water_alarm_controller.dart';
 import 'package:iot_plant_control/models/water_time.dart';
@@ -70,21 +71,6 @@ class WaterController extends GetxController {
     waterTime.removeAt(index);
     validateSortedAlarms(waterTime);
     await saveWaterTimes(waterTime);
-  }
-
-  DateTime convertStringToDateTime(String time) {
-    // Ambil tanggal hari ini
-    DateTime now = DateTime.now();
-
-    // Pisahkan waktu dari string "HH:mm"
-    List<String> timeParts = time.split(':');
-    int hours = int.parse(timeParts[0]);
-    int minutes = int.parse(timeParts[1]);
-
-    // Gabungkan tanggal hari ini dengan waktu yang diberikan
-    DateTime dateTime = DateTime(now.year, now.month, now.day, hours, minutes);
-
-    return dateTime;
   }
 
   Future<void> toggleWatering(String id, bool value) async {
