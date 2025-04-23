@@ -14,7 +14,7 @@ class RefillTandonScreen extends StatelessWidget {
     final refillTandonController = Get.find<RefillTandonController>();
     final mqttController = Get.find<MqttController>();
     return Scaffold(
-      backgroundColor: Color(0xfff7f7f7),
+      backgroundColor: Color(0xffffffff),
       appBar: AppBar(
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.transparent,
@@ -34,8 +34,18 @@ class RefillTandonScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Divider(height: 0.4.h, thickness: 0.4.h),
-            SizedBox(height: 30.h),
             Spacer(),
+            SizedBox(
+              width: 350.w,
+              height: 350.h,
+              child: Obx(
+                () => Image.asset(
+                  refillTandonController.isServiceRunning.value
+                      ? 'assets/img/icon/water-tower.gif'
+                      : 'assets/img/icon/water-tower.jpg',
+                ),
+              ),
+            ),
             Obx(
               () => Container(
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
@@ -118,6 +128,7 @@ class RefillTandonScreen extends StatelessWidget {
               ),
             ),
             Spacer(),
+            SizedBox(height: 60.h),
           ],
         ),
       ),

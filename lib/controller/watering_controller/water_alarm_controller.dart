@@ -7,9 +7,9 @@ import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:intl/intl.dart';
 import 'package:iot_plant_control/components/string_formatter.dart';
 import 'package:iot_plant_control/controller/mqtt/mqtt_controller.dart';
+import 'package:iot_plant_control/controller/watering_controller/condition_checker.dart';
 import 'package:iot_plant_control/controller/watering_controller/water_controller.dart';
 import 'package:iot_plant_control/models/water_time.dart';
 import 'package:iot_plant_control/widgets/water_widget/watering_notification.dart';
@@ -41,13 +41,17 @@ void startWatering() async {
   });
 
   final List<String>? jsonList = prefs.getStringList('water_times');
-  final String hhmm = DateFormat('HH:mm').format(now);
 
   if (jsonList != null) {
     final items =
         jsonList.map((e) => WaterTime.fromJson(jsonDecode(e))).toList();
     int index = items.indexWhere((element) {
-      return element.time == hhmm &&
+      final duration = Duration(minutes: int.parse(element.duration));
+      final bool inRange = isNowWithinRangeInclusive(
+        alarmTime: convertStringToDateTime(element.time),
+        duration: duration,
+      );
+      return inRange &&
           element.isConflict.value == false &&
           element.isActive.value == true;
     });
@@ -133,6 +137,7 @@ void stopWatering() async {
     }
   });
   final List<String>? jsonList = prefs.getStringList('water_times');
+  debugPrint('current ring from pragma (stopWatering): ${box.read('current_ring')}');
   if (jsonList != null) {
     final items =
         jsonList.map((e) => WaterTime.fromJson(jsonDecode(e))).toList();

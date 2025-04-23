@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:iot_plant_control/controller/watering_controller/check_overlapping.dart';
+import 'package:iot_plant_control/controller/watering_controller/condition_checker.dart';
 import 'package:iot_plant_control/controller/watering_controller/water_controller.dart';
 import 'package:iot_plant_control/models/water_time.dart';
 import 'package:shared_preferences/shared_preferences.dart';

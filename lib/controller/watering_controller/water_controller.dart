@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:iot_plant_control/components/string_formatter.dart';
-import 'package:iot_plant_control/controller/watering_controller/check_overlapping.dart';
+import 'package:iot_plant_control/controller/watering_controller/condition_checker.dart';
 import 'package:iot_plant_control/controller/watering_controller/water_alarm_controller.dart';
 import 'package:iot_plant_control/models/water_time.dart';
 import 'package:iot_plant_control/components/toast.dart';
@@ -96,7 +96,10 @@ class WaterController extends GetxController {
       );
       waterAlarmController.setAlarm(id: id, alarmTime: waterDate);
     } else {
-      debugPrint(box.read('current_ring'));
+      final String prefix = 'current_ring from void (toggleWatering): ';
+      debugPrint(
+        '$prefix${box.read('current_ring')}',
+      );
       // if (box.read('current_ring') == id) {
       //   box.remove('current_ring');
       //   final SendPort? isolateSendPort = IsolateNameServer.lookupPortByName(

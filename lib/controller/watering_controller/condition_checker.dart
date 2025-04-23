@@ -67,3 +67,14 @@ void validateSortedAlarms(List<WaterTime> alarms) {
         false; // Tidak ada konflik jika hanya 1 alarm tersisa
   }
 }
+
+bool isNowWithinRangeInclusive({
+  required DateTime alarmTime,
+  required Duration duration,
+}) {
+  final now = DateTime.now();
+  final endTime = alarmTime.add(duration);
+
+  return (now.isAtSameMomentAs(alarmTime) || now.isAfter(alarmTime)) &&
+      (now.isBefore(endTime) || now.isAtSameMomentAs(endTime));
+}

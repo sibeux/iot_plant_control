@@ -4,10 +4,7 @@ import 'package:iot_plant_control/controller/image_slide_controller.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class ImageCarousel extends StatelessWidget {
-  const ImageCarousel({
-    super.key,
-    required this.imageSlideController,
-  });
+  const ImageCarousel({super.key, required this.imageSlideController});
 
   final ImageSlideController imageSlideController;
 
@@ -33,8 +30,7 @@ class ImageCarousel extends StatelessWidget {
             },
             itemBuilder: (context, index) {
               return Image.asset(
-                'assets/img/plant/${1}.png',
-                // 'assets/img/plant/${index + 1}.png',
+                'assets/img/plant/${index + 1}.png',
                 fit: BoxFit.cover,
                 width: double.infinity,
                 height: 200.h,
