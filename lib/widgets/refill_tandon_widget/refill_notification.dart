@@ -41,7 +41,7 @@ Future<void> showPengisianTandonNotification() async {
   );
 
   await FlutterLocalNotificationsPlugin().show(
-    0,
+    169,
     'Pengisian Tandon Air',
     'Pengisian tandon air sedang berlangsung',
     notificationDetails,
@@ -86,7 +86,9 @@ Future<void> showTandonPenuhNotification() async {
   );
 
   await FlutterLocalNotificationsPlugin().show(
-    0,
+    // Harusnya ID itu berbeda-beda.
+    // Ini khusus agar dia me-replace notifikasi pengisian tandon di atas.
+    169,
     'Pengisian Selesai',
     'Tandon air Anda telah terisi penuh',
     notificationDetails,
