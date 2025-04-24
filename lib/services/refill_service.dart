@@ -69,7 +69,10 @@ Future<void> initRefillService() async {
 
 @pragma('vm:entry-point')
 void onStart(ServiceInstance service) async {
-  final MqttController mqttController = Get.put(MqttController());
+  final MqttController mqttController = Get.put(
+    MqttController(),
+    tag: 'mqtt-refill-service',
+  );
   if (service is AndroidServiceInstance) {
     showPengisianTandonNotification();
   }

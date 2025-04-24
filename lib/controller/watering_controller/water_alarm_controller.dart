@@ -27,7 +27,10 @@ void startWatering() async {
   final box = GetStorage();
   final prefs = await SharedPreferences.getInstance();
   await prefs.reload();
-  final MqttController mqttController = Get.put(MqttController());
+  final MqttController mqttController = Get.put(
+    MqttController(),
+    tag: 'mqtt-start-watering',
+  );
   int counter = 0;
   final now = DateTime.now();
   debugPrint('Start alarm triggered at $now');
@@ -125,7 +128,10 @@ void startWatering() async {
 // Harus di luar class/widget.
 @pragma('vm:entry-point')
 void stopWatering() async {
-  final MqttController mqttController = Get.put(MqttController());
+  final MqttController mqttController = Get.put(
+    MqttController(),
+    tag: 'mqtt-stop-watering',
+  );
   final prefs = await SharedPreferences.getInstance();
   await prefs.reload();
   final box = GetStorage();
