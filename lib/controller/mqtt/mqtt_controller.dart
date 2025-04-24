@@ -61,6 +61,7 @@ class MqttController extends GetxController {
         print('❌ MQTT connection failed: $e');
       }
       client.disconnect();
+      mqttIsConnected.value = false;
     }
 
     client.updates?.listen((List<MqttReceivedMessage<MqttMessage>> c) {
@@ -115,6 +116,7 @@ class MqttController extends GetxController {
   }
 
   void onDisconnected() {
+    mqttIsConnected.value = false;
     if (kDebugMode) {
       print('⚠️ MQTT Disconnected');
     }
@@ -131,7 +133,9 @@ class MqttController extends GetxController {
         print('📤 Published $value to $topic');
       }
       showToast('Published $value to $topic');
+      mqttIsConnected.value = true;
     } else {
+      mqttIsConnected.value = false;
       if (kDebugMode) {
         print('❗ MQTT not connected');
       }
