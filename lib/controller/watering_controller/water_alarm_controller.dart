@@ -188,6 +188,7 @@ class WaterAlarmController extends GetxController {
       alarmClock: true,
       exact: true,
       wakeup: true,
+      allowWhileIdle: true,
       rescheduleOnReboot: true,
     );
   }

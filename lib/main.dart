@@ -22,6 +22,8 @@ const String isolateName = 'water_alarm_port';
 void main() async {
   // Dibutuhkan setpreferredOrientations.
   WidgetsFlutterBinding.ensureInitialized();
+  
+  await AndroidAlarmManager.initialize();
 
   // RefillTandonCotroller & WaterController dipanggil di sini,
   // karena di persistentbar harus dipanggil saat buka screen masing-masing.
@@ -33,7 +35,6 @@ void main() async {
   // await initServiceExample();
   await initRefillService();
   await GetStorage.init();
-  await AndroidAlarmManager.initialize();
   await permissionController.requestExactAlarmPermission();
 
   // For alarm manager.
