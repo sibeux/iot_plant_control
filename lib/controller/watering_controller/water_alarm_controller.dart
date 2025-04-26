@@ -59,12 +59,12 @@ void startWatering() async {
           element.isActive.value == true;
     });
     final duration = Duration(minutes: int.parse(items[index].duration));
-
-    box.write('current_ring', items[index].id);
+    
     int counter = 0;
 
     Timer.periodic(const Duration(seconds: 10), (timer) async {
       if (counter == 0) {
+        box.write('current_ring', items[index].id);
         await AndroidAlarmManager.oneShotAt(
           now.add(duration), // alarm time
           int.tryParse(items[index].id)!, // alarm ID
