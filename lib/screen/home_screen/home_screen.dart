@@ -46,11 +46,12 @@ class HomeScreen extends StatelessWidget {
               children: [
                 ImageCarousel(imageSlideController: imageSlideController),
                 SizedBox(height: 10.h),
-                TitleDate(formattedDate: formattedDate),
+                TitleDate(),
                 SizedBox(height: 15.h),
                 BoxMonitor(
                   clockController: clockController,
                   mqttController: mqttController,
+                  formattedDate: formattedDate,
                 ),
               ],
             ),

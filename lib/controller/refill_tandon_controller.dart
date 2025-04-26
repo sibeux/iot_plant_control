@@ -1,4 +1,5 @@
 import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:iot_plant_control/widgets/refill_tandon_widget/refill_notification.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,6 +9,8 @@ class RefillTandonController extends GetxController {
   var isTap = false.obs;
   var isLoading = false.obs;
   final FlutterBackgroundService _service = FlutterBackgroundService();
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
 
   @override
   void onInit() {
@@ -25,7 +28,9 @@ class RefillTandonController extends GetxController {
     } else {
       await prefs.setBool('isFull', true);
       if (!isFromButton) {
-      showTandonPenuhNotification();
+        showTandonPenuhNotification();
+      } else {
+        await flutterLocalNotificationsPlugin.cancel(169);
       }
       _service.invoke('stopService');
     }

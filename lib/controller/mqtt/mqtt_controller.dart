@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+import 'package:iot_plant_control/components/toast.dart';
 import 'package:iot_plant_control/controller/refill_tandon_controller.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
@@ -60,6 +61,7 @@ class MqttController extends GetxController {
         print('❌ MQTT connection failed: $e');
       }
       client.disconnect();
+      mqttIsConnected.value = false;
     }
 
     client.updates?.listen((List<MqttReceivedMessage<MqttMessage>> c) {
@@ -110,12 +112,15 @@ class MqttController extends GetxController {
       print('✅ MQTT Connected');
     }
     client.subscribe(topic, MqttQos.atMostOnce);
+    showToast('✅ MQTT Connected');
   }
 
   void onDisconnected() {
+    mqttIsConnected.value = false;
     if (kDebugMode) {
       print('⚠️ MQTT Disconnected');
     }
+    showToast('⚠️ MQTT Disconnected');
   }
 
   void publishToBroker(String value) {
@@ -127,10 +132,14 @@ class MqttController extends GetxController {
       if (kDebugMode) {
         print('📤 Published $value to $topic');
       }
+      showToast('Published $value to $topic');
+      mqttIsConnected.value = true;
     } else {
+      mqttIsConnected.value = false;
       if (kDebugMode) {
         print('❗ MQTT not connected');
       }
+      showToast('❗MQTT not connected');
     }
   }
 

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 void showToast(String msg) {
@@ -10,6 +9,7 @@ void showToast(String msg) {
     timeInSecForIosWeb: 1,
     backgroundColor: Colors.grey,
     textColor: const Color.fromARGB(255, 255, 255, 255),
-    fontSize: 10.0.sp,
+    // Gak pakai screenutils karena error di pragma.
+    fontSize: 10,
   );
 }

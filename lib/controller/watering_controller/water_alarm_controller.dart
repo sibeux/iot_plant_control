@@ -27,7 +27,10 @@ void startWatering() async {
   final box = GetStorage();
   final prefs = await SharedPreferences.getInstance();
   await prefs.reload();
-  final MqttController mqttController = Get.put(MqttController());
+  final MqttController mqttController = Get.put(
+    MqttController(),
+    tag: 'mqtt-start-watering',
+  );
   int counter = 0;
   final now = DateTime.now();
   debugPrint('Start alarm triggered at $now');
@@ -56,12 +59,12 @@ void startWatering() async {
           element.isActive.value == true;
     });
     final duration = Duration(minutes: int.parse(items[index].duration));
-
-    box.write('current_ring', items[index].id);
+    
     int counter = 0;
 
     Timer.periodic(const Duration(seconds: 10), (timer) async {
       if (counter == 0) {
+        box.write('current_ring', items[index].id);
         await AndroidAlarmManager.oneShotAt(
           now.add(duration), // alarm time
           int.tryParse(items[index].id)!, // alarm ID
@@ -73,6 +76,9 @@ void startWatering() async {
         );
         debugPrint(
           'Alarm off set for id: ${items[index].id} at ${now.add(duration)}',
+        );
+        debugPrint(
+          'current ring from pragma (startWatering): ${box.read('current_ring')}',
         );
         counter++;
         timer.cancel();
@@ -122,7 +128,10 @@ void startWatering() async {
 // Harus di luar class/widget.
 @pragma('vm:entry-point')
 void stopWatering() async {
-  final MqttController mqttController = Get.put(MqttController());
+  final MqttController mqttController = Get.put(
+    MqttController(),
+    tag: 'mqtt-stop-watering',
+  );
   final prefs = await SharedPreferences.getInstance();
   await prefs.reload();
   final box = GetStorage();
@@ -137,7 +146,9 @@ void stopWatering() async {
     }
   });
   final List<String>? jsonList = prefs.getStringList('water_times');
-  debugPrint('current ring from pragma (stopWatering): ${box.read('current_ring')}');
+  debugPrint(
+    'current ring from pragma (stopWatering): ${box.read('current_ring')}',
+  );
   if (jsonList != null) {
     final items =
         jsonList.map((e) => WaterTime.fromJson(jsonDecode(e))).toList();
@@ -162,6 +173,7 @@ void stopWatering() async {
     debugPrint(
       'Alarm on again set for id: ${items[index].id} at tomorrow: $waterDate',
     );
+    box.remove('current_ring');
   }
 }
 
@@ -176,6 +188,7 @@ class WaterAlarmController extends GetxController {
       alarmClock: true,
       exact: true,
       wakeup: true,
+      allowWhileIdle: true,
       rescheduleOnReboot: true,
     );
   }

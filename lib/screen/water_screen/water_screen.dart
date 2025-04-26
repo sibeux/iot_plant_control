@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:iot_plant_control/controller/watering_controller/permission_controller.dart';
 import 'package:iot_plant_control/controller/watering_controller/water_controller.dart';
 import 'package:iot_plant_control/screen/water_screen/add_water_screen.dart';
 import 'package:iot_plant_control/widgets/water_widget/water_listtile.dart';
@@ -11,6 +12,7 @@ class WaterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final waterController = Get.find<WaterController>();
+    final permissionController = Get.find<PermissionController>();
     return Scaffold(
       backgroundColor: Color(0xfff7f7f7),
       appBar: AppBar(
@@ -110,28 +112,36 @@ class WaterScreen extends StatelessWidget {
               child: SizedBox(
                 width: 60.sp,
                 height: 60.sp,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Get.to(
-                      () => const AddWaterScreen(),
-                      transition: Transition.rightToLeft,
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeInOut,
-                      fullscreenDialog: true,
-                      popGesture: false,
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Color.fromARGB(255, 69, 214, 149),
-                    elevation: 0,
-                    splashFactory: InkRipple.splashFactory,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(100.r),
+                child: Obx(
+                  () => AbsorbPointer(
+                    absorbing: !permissionController.isExactAlarmGranted.value,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Get.to(
+                          () => const AddWaterScreen(),
+                          transition: Transition.rightToLeft,
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                          fullscreenDialog: true,
+                          popGesture: false,
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor:
+                            permissionController.isExactAlarmGranted.value
+                                ? Color.fromARGB(255, 69, 214, 149)
+                                : Color.fromARGB(255, 163, 163, 163),
+                        elevation: 0,
+                        splashFactory: InkRipple.splashFactory,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(100.r),
+                        ),
+                        padding: EdgeInsets.all(0),
+                      ),
+                      child: Icon(Icons.add, size: 30.sp, color: Colors.white),
                     ),
-                    padding: EdgeInsets.all(0),
                   ),
-                  child: Icon(Icons.add, size: 30.sp, color: Colors.white),
                 ),
               ),
             ),

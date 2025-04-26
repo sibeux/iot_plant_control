@@ -12,10 +12,12 @@ class BoxMonitor extends StatelessWidget {
     super.key,
     required this.clockController,
     required this.mqttController,
+    required this.formattedDate,
   });
 
   final ClockController clockController;
   final MqttController mqttController;
+  final String formattedDate;
 
   @override
   Widget build(BuildContext context) {
@@ -35,10 +37,7 @@ class BoxMonitor extends StatelessWidget {
           ],
         ),
         child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: 20.w,
-            vertical: 10.h,
-          ),
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
           child: Column(
             children: [
               Row(
@@ -93,8 +92,7 @@ class BoxMonitor extends StatelessWidget {
                         id: 2,
                         title: 'Temperature',
                         status: 'Good',
-                        value:
-                            '${mqttController.temperatureValue.value}°',
+                        value: '${mqttController.temperatureValue.value}°',
                       ),
                     ),
                   ),
@@ -126,8 +124,7 @@ class BoxMonitor extends StatelessWidget {
                         id: 4,
                         title: 'Temperature',
                         status: 'Good',
-                        value:
-                            '${mqttController.temperatureValue.value}°',
+                        value: '${mqttController.temperatureValue.value}°',
                       ),
                     ),
                   ),
