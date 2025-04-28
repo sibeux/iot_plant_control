@@ -73,6 +73,7 @@ void startWatering() async {
           exact: true,
           wakeup: true,
           rescheduleOnReboot: true,
+          allowWhileIdle: true,
         );
         debugPrint(
           'Alarm off set for id: ${items[index].id} at ${now.add(duration)}',
@@ -169,6 +170,7 @@ void stopWatering() async {
       exact: true,
       wakeup: true,
       rescheduleOnReboot: true,
+      allowWhileIdle: true,
     );
     debugPrint(
       'Alarm on again set for id: ${items[index].id} at tomorrow: $waterDate',
