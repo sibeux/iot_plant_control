@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -5,8 +7,8 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:iot_plant_control/controller/mqtt/mqtt_controller.dart';
 import 'package:iot_plant_control/controller/tds_controller.dart';
 
-class ButtonMix extends StatelessWidget {
-  const ButtonMix({super.key});
+class ButtonSet extends StatelessWidget {
+  const ButtonSet({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,11 +16,15 @@ class ButtonMix extends StatelessWidget {
     final tdsController = Get.find<TdsController>();
     return ElevatedButton(
       onPressed: () async {
-        // MIXTDS: 900
-        mqttController.publishToBroker(
-          'MIXTDS: ${tdsController.tdsValue.value.toStringAsFixed(0)}',
-        );
-        await tdsController.saveTdsValue();
+        Map<String, String> data = {
+          'KELEMBABANMIN': tdsController.kelembabanValueMin.value
+              .toStringAsFixed(0),
+          'KELEMBABANMAX': tdsController.kelembabanValueMax.value
+              .toStringAsFixed(0),
+        };
+        String jsonString = jsonEncode(data);
+        mqttController.publishToBroker(jsonString);
+        await tdsController.saveKelembabanValue();
       },
       style: ElevatedButton.styleFrom(
         foregroundColor: Colors.white,
@@ -31,7 +37,7 @@ class ButtonMix extends StatelessWidget {
         minimumSize: Size(150.w, 40.h),
       ),
       child: Text(
-        'Mix TDS',
+        'SET',
         style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold),
       ),
     );

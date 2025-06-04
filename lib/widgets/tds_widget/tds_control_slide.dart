@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:iot_plant_control/controller/tds_controller.dart';
-import 'package:iot_plant_control/widgets/tds_widget/button_mix.dart';
+import 'package:iot_plant_control/widgets/tds_widget/button_set.dart';
 
 class TdsControlSlide extends StatelessWidget {
   const TdsControlSlide({super.key, required this.type});
@@ -19,7 +19,7 @@ class TdsControlSlide extends StatelessWidget {
         Container(
           alignment: Alignment.centerLeft,
           child: Text(
-            'Total Dissolved Solids ${type.capitalizeFirst}',
+            'Kelembaban ${type.capitalizeFirst}',
             style: TextStyle(
               fontSize: 14.sp,
               fontWeight: FontWeight.w600,
@@ -39,15 +39,24 @@ class TdsControlSlide extends StatelessWidget {
                 ),
                 child: Obx(
                   () => Slider(
-                    activeColor: Color.fromARGB(255, 255, 163, 189),
-                    thumbColor: HexColor('#f3516d'),
+                    activeColor:
+                        type == 'minimum'
+                            ? Color.fromARGB(255, 163, 255, 166)
+                            : Color.fromARGB(255, 255, 163, 163),
+                    thumbColor:
+                        type == 'minimum'
+                            ? HexColor('#80d756')
+                            : HexColor('#d75680'),
                     inactiveColor: Colors.grey.withAlpha(100),
-                    min: 500,
-                    max: 1500,
-                    divisions: 10,
-                    value: tdsController.tdsValue.value,
+                    min: 0,
+                    max: 100,
+                    divisions: 100,
+                    value:
+                        type == 'minimum'
+                            ? tdsController.kelembabanValueMin.value
+                            : tdsController.kelembabanValueMax.value,
                     onChanged: (value) {
-                      tdsController.setTdsValue(value);
+                      tdsController.setKelembabanValue(value, type);
                     },
                   ),
                 ),
@@ -60,11 +69,16 @@ class TdsControlSlide extends StatelessWidget {
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(50.r),
-                color: HexColor('#e95263'),
+                color:
+                    type == 'minimum'
+                        ? HexColor('#80d756')
+                        : HexColor('#d75680'),
               ),
               child: Obx(
                 () => Text(
-                  tdsController.tdsValue.value.toStringAsFixed(0),
+                  type == 'maksimum'
+                      ? "${tdsController.kelembabanValueMax.value.toStringAsFixed(0)}%"
+                      : "${tdsController.kelembabanValueMin.value.toStringAsFixed(0)}%",
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w600,
@@ -76,7 +90,7 @@ class TdsControlSlide extends StatelessWidget {
           ],
         ),
         SizedBox(height: 10.h),
-        Center(child: ButtonMix()),
+        type == 'maksimum' ? Center(child: ButtonSet()) : SizedBox(),
       ],
     );
   }

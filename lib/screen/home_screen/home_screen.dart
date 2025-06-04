@@ -53,6 +53,7 @@ class HomeScreen extends StatelessWidget {
                   mqttController: mqttController,
                   formattedDate: formattedDate,
                 ),
+                SizedBox(height: 20.h),
               ],
             ),
           ),
