@@ -49,7 +49,7 @@ void startWatering() async {
     final items =
         jsonList.map((e) => WaterTime.fromJson(jsonDecode(e))).toList();
     int index = items.indexWhere((element) {
-      final duration = Duration(minutes: int.parse(element.duration));
+      final duration = Duration(seconds: int.parse(element.duration));
       final bool inRange = isNowWithinRangeInclusive(
         alarmTime: convertStringToDateTime(element.time),
         duration: duration,
@@ -58,7 +58,7 @@ void startWatering() async {
           element.isConflict.value == false &&
           element.isActive.value == true;
     });
-    final duration = Duration(minutes: int.parse(items[index].duration));
+    final duration = Duration(seconds: int.parse(items[index].duration));
     
     int counter = 0;
 

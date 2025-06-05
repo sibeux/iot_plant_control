@@ -6,10 +6,7 @@ import 'package:iot_plant_control/controller/watering_controller/water_controlle
 import 'package:iot_plant_control/widgets/water_widget/add_water_widget/add_duration_modal/add_duration_modal.dart';
 
 class InsertDuration extends StatelessWidget {
-  const InsertDuration({
-    super.key,
-    required this.waterController,
-  });
+  const InsertDuration({super.key, required this.waterController});
 
   final WaterController waterController;
 
@@ -32,14 +29,11 @@ class InsertDuration extends StatelessWidget {
           children: [
             Text(
               'Duration',
-              style: TextStyle(
-                fontSize: 18.sp,
-                fontWeight: FontWeight.w600,
-              ),
+              style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600),
             ),
             Obx(
               () => Text(
-                '${int.tryParse(waterController.selectedDuration.value)} ${int.tryParse(waterController.selectedDuration.value) == 1 ? 'minute' : 'minutes'}',
+                '${int.tryParse(waterController.selectedDuration.value)} ${int.tryParse(waterController.selectedDuration.value) == 1 ? 'second' : 'seconds'}',
                 style: TextStyle(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.normal,

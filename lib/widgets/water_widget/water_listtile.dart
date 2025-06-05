@@ -129,7 +129,7 @@ class WaterTile extends StatelessWidget {
                                                 left: 5.w,
                                               ),
                                               child: Text(
-                                                '${int.tryParse(waterTime.duration)} ${int.tryParse(waterTime.duration) == 1 ? 'minute' : 'minutes'}',
+                                                '${int.tryParse(waterTime.duration)} ${int.tryParse(waterTime.duration) == 1 ? 'second' : 'seconds'}',
                                                 style: TextStyle(
                                                   fontSize: 16.sp,
                                                   color:

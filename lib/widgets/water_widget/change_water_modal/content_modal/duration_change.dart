@@ -68,8 +68,8 @@ class DurationChange extends StatelessWidget {
           Obx(
             () => Text(
               int.tryParse(waterController.selectedDuration.value) == 1
-                  ? ' min'
-                  : ' mins',
+                  ? ' sec'
+                  : ' secs',
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 14.sp,

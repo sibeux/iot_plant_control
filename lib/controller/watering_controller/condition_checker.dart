@@ -12,7 +12,7 @@ bool checkOverlapping({
     if (alarm.id == id) continue; // Lewati alarm yang sama
 
     final existingStart = DateTime.parse("2023-01-01 ${alarm.time}:00");
-    final existingDuration = Duration(minutes: int.parse(alarm.duration));
+    final existingDuration = Duration(seconds: int.parse(alarm.duration));
     final existingEnd = existingStart.add(existingDuration);
 
     // Cek apakah alarm baru memiliki waktu mulai yang sama dengan alarm yang ada
@@ -41,7 +41,7 @@ void validateSortedAlarms(List<WaterTime> alarms) {
   for (int i = 0; i < alarms.length; i++) {
     final current = alarms[i];
     final currentStart = DateTime.parse("2023-01-01 ${current.time}:00");
-    final currentDuration = Duration(minutes: int.parse(current.duration));
+    final currentDuration = Duration(seconds: int.parse(current.duration));
     final currentEnd = currentStart.add(currentDuration);
 
     for (int j = i + 1; j < alarms.length; j++) {
