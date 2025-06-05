@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:iot_plant_control/screen/chart_screen/chart_screen.dart';
 import 'package:iot_plant_control/screen/home_screen/home_screen.dart';
 import 'package:iot_plant_control/screen/refill_screen/refill_tandon_screen.dart';
 import 'package:iot_plant_control/screen/water_screen/water_screen.dart';
@@ -55,6 +56,12 @@ class PersistentBarController extends GetxController {
         title: 'Refill',
         iconActive: Icons.water_drop_rounded,
         iconInactive: Icons.water_drop_outlined,
+      ),
+      buttonNavBar(
+        screen: ChartScreen(),
+        title: 'Record',
+        iconActive: Icons.bar_chart_rounded,
+        iconInactive: Icons.bar_chart_outlined,
       ),
     ];
   }

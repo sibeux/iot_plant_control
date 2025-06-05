@@ -92,7 +92,8 @@ class BoxMonitor extends StatelessWidget {
                         id: 2,
                         title: 'Kelembaban',
                         status: 'Good',
-                        value: '${mqttController.temperatureValue.value}°',
+                        value:
+                            "${mqttController.kelembabanValue.value.toStringAsFixed(0)}%",
                       ),
                     ),
                   ),
@@ -124,7 +125,8 @@ class BoxMonitor extends StatelessWidget {
                         id: 4,
                         title: 'Temperature',
                         status: 'Good',
-                        value: '${mqttController.temperatureValue.value}°',
+                        value:
+                            '${mqttController.temperatureValue.value.toStringAsFixed(0)}°',
                       ),
                     ),
                   ),
