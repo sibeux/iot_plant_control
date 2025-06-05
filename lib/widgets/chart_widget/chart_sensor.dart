@@ -261,7 +261,7 @@ class _ChartSensorState extends State<ChartSensor> {
         gradient: LinearGradient(
           colors:
               gradientColors
-                  .map((color) => color.withValues(alpha: 0.1))
+                  .map((color) => color.withValues(alpha: 0.05))
                   .toList(),
         ),
       ),
