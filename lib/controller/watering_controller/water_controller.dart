@@ -2,17 +2,16 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
+import 'package:iot_plant_control/components/colorize_terminal.dart';
 import 'package:iot_plant_control/components/string_formatter.dart';
 import 'package:iot_plant_control/controller/watering_controller/condition_checker.dart';
-import 'package:iot_plant_control/controller/watering_controller/water_alarm_controller.dart';
 import 'package:iot_plant_control/models/water_time.dart';
 import 'package:iot_plant_control/components/toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class WaterController extends GetxController {
-  final waterAlarmController = Get.put(WaterAlarmController());
   var waterTime = RxList<WaterTime>([]);
 
   late FixedExtentScrollController hourController;
@@ -21,7 +20,7 @@ class WaterController extends GetxController {
 
   var selectedHour = 0.obs;
   var selectedMinute = 0.obs;
-  var selectedDuration = '2'.obs;
+  var selectedDuration = '30'.obs;
 
   var countdownString = ''.obs;
 
@@ -70,7 +69,6 @@ class WaterController extends GetxController {
 
   Future<void> removeWatering(String id) async {
     int index = waterTime.indexWhere((element) => element.id == id);
-    waterAlarmController.cancelAlarm(id: id);
     waterTime.removeAt(index);
     validateSortedAlarms(waterTime);
     await saveWaterTimes(waterTime);
@@ -79,7 +77,6 @@ class WaterController extends GetxController {
   Future<void> toggleWatering(String id, bool value) async {
     int index = waterTime.indexWhere((element) => element.id == id);
     DateTime waterDate = convertStringToDateTime(waterTime[index].time);
-    final box = GetStorage();
     // Jika waktu sudah lewat hari ini, set ke besok
     if (waterDate.isBefore(DateTime.now())) {
       waterDate = waterDate.add(const Duration(days: 1));
@@ -94,25 +91,6 @@ class WaterController extends GetxController {
           int.parse(waterTime[index].time.split(':')[1]),
         ),
       );
-      waterAlarmController.setAlarm(id: id, alarmTime: waterDate);
-    } else {
-      final String prefix = 'current_ring from void (toggleWatering): ';
-      debugPrint(
-        '$prefix${box.read('current_ring')}',
-      );
-      // if (box.read('current_ring') == id) {
-      //   box.remove('current_ring');
-      //   final SendPort? isolateSendPort = IsolateNameServer.lookupPortByName(
-      //     'water_alarm_receive_port',
-      //   );
-      //   if (isolateSendPort != null) {
-      //     isolateSendPort.send('stop');
-      //   } else {
-      //     debugPrint('Isolate port tidak ditemukan');
-      //   }
-      //   Get.find<MqttController>().publishToBroker('stopwatering');
-      // }
-      waterAlarmController.cancelAlarm(id: id);
     }
     await saveWaterTimes(waterTime);
   }
@@ -165,21 +143,63 @@ class WaterController extends GetxController {
     update();
   }
 
+  Future<void> sendWateringSchedule(List<String> data) async {
+    // Dokumentasi pake cron railway
+    // https://chatgpt.com/c/68405559-6ac0-8002-bfd2-0c249b5d824d
+    final url = Uri.parse(
+      'https://mqtt-myplant-schedule-production.up.railway.app/schedule',
+    );
+
+    logInfo('Payload: $data');
+
+    // asumsikan time di data adalah Waktu Indonesia Barat (WIB, UTC+7)
+    final schedule =
+        data
+            .map((item) => jsonDecode(item))
+            .where(
+              (item) => item['isActive'] == true && item['isConflict'] == false,
+            )
+            .map((item) {
+              // parsing string jam:menit ke DateTime dengan zona WIB (UTC+7)
+              final localTime = DateFormat('HH:mm').parse(item['time']);
+              final utcTime = localTime.subtract(
+                const Duration(hours: 7),
+              ); // WIB → UTC
+
+              return {
+                'time': DateFormat('HH:mm').format(utcTime),
+                'duration': int.parse(item['duration']),
+              };
+            })
+            .toList();
+
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(schedule),
+    );
+
+    if (response.statusCode == 200) {
+      logSuccess("Schedule sent successfully: ${response.body}");
+    } else {
+      logError("Failed to send schedule: ${response.body}");
+    }
+  }
+
   Future<void> saveWaterTimes(RxList<WaterTime> list) async {
-    // final mqttController = Get.find<MqttController>();
     final prefs = await SharedPreferences.getInstance();
 
-    final List<Map<String, dynamic>> mapList =
-        list.map((item) => item.toJson()).toList();
-
-    final String jsonPayload = jsonEncode(mapList);
-    // mqttController.publishToBroker(jsonPayload);
-
-    debugPrint('jsonPayload: $jsonPayload');
+    // final List<Map<String, dynamic>> mapList =
+    //     list.map((item) => item.toJson()).toList();
+    // final String jsonPayload = jsonEncode(mapList);
+    // logInfo('jsonPayload: $jsonPayload');
 
     // Untuk local storage tetap simpan sebagai List<String>
     final List<String> jsonListForPrefs =
         list.map((item) => jsonEncode(item.toJson())).toList();
+
+    sendWateringSchedule(jsonListForPrefs);
+
     await prefs.setStringList('water_times', jsonListForPrefs);
   }
 

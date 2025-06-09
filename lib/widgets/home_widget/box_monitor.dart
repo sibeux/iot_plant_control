@@ -90,9 +90,10 @@ class BoxMonitor extends StatelessWidget {
                     child: Obx(
                       () => BoxMonitorBlpr(
                         id: 2,
-                        title: 'Temperature',
+                        title: 'Kelembaban',
                         status: 'Good',
-                        value: '${mqttController.temperatureValue.value}°',
+                        value:
+                            "${mqttController.kelembabanValue.value.toStringAsFixed(0)}%",
                       ),
                     ),
                   ),
@@ -124,14 +125,29 @@ class BoxMonitor extends StatelessWidget {
                         id: 4,
                         title: 'Temperature',
                         status: 'Good',
-                        value: '${mqttController.temperatureValue.value}°',
+                        value:
+                            '${mqttController.temperatureValue.value.toStringAsFixed(0)}°',
                       ),
                     ),
                   ),
                 ],
               ),
               SizedBox(height: 15.h),
-              TdsControlSlide(type: ''),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Setting Kelembaban',
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black.withAlpha(200),
+                  ),
+                ),
+              ),
+              SizedBox(height: 15.h),
+              TdsControlSlide(type: 'minimum'),
+              SizedBox(height: 10.h),
+              TdsControlSlide(type: 'maksimum'),
             ],
           ),
         ),

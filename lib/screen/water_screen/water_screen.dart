@@ -33,39 +33,6 @@ class WaterScreen extends StatelessWidget {
         children: [
           Divider(height: 0.4.h, thickness: 0.4.h),
           SizedBox(height: 10.h),
-          // Obx(
-          //   () =>
-          //       waterController.waterTime.isNotEmpty
-          //           ? Container(
-          //             padding: EdgeInsets.symmetric(
-          //               horizontal: 16.w,
-          //               vertical: 16.h,
-          //             ),
-          //             decoration: BoxDecoration(
-          //               color:
-          //                   waterController.isWaterOn.value
-          //                       ? Colors.green.shade100
-          //                       : Colors.red.shade100,
-          //               borderRadius: BorderRadius.circular(8.r),
-          //             ),
-          //             child: Obx(
-          //               () => Text(
-          //                 waterController.isWaterOn.value
-          //                     ? 'Watering: ${waterController.timeNotifier.value}'
-          //                     : 'Watering OFF',
-          //                 style: TextStyle(
-          //                   fontSize: 18.sp,
-          //                   fontWeight: FontWeight.bold,
-          //                   color:
-          //                       waterController.isWaterOn.value
-          //                           ? Colors.green.shade800
-          //                           : Colors.red.shade800,
-          //                 ),
-          //               ),
-          //             ),
-          //           )
-          //           : SizedBox(),
-          // ),
           SizedBox(height: 10.h),
           Expanded(
             child: Obx(

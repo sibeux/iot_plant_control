@@ -14,7 +14,7 @@ class AddWaterScreen extends StatelessWidget {
     final waterController = Get.find<WaterController>();
     final addWaterController = Get.put(AddWaterController());
     waterController.setCurrentTime();
-    waterController.selectedDuration.value = '2';
+    waterController.selectedDuration.value = '30';
     return Scaffold(
       backgroundColor: Color(0xfffafcfe),
       appBar: AppBar(
