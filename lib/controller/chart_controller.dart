@@ -14,6 +14,8 @@ class ChartController extends GetxController {
   RxList<String> kelembapanAvgData = <String>[].obs;
   RxList<String> tdsAvgData = <String>[].obs;
 
+  RxList<bool> missingDates = <bool>[].obs;
+
   RxList<FlSpot> suhuChartPoint = <FlSpot>[].obs;
   RxList<FlSpot> phChartPoint = <FlSpot>[].obs;
   RxList<FlSpot> kelembapanChartPoint = <FlSpot>[].obs;
@@ -88,7 +90,7 @@ class ChartController extends GetxController {
       List<int> dayNumbers = dateRange.map((date) => date.day).toList();
 
       // Find missng dates
-      List<bool> missingDates = [
+      missingDates.value = [
         for (int i = 0; i < 7; i++)
           dailyAverages.any((avg) {
             return avg.date.day == dateRange[i].day;

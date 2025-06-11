@@ -160,18 +160,48 @@ class _ChartSensorState extends State<ChartSensor> {
                   spot.x.toInt() < chartController.suhuAvgData.length
                       ? type == 'suhu'
                           ? double.parse(
-                            chartController.suhuAvgData[spot.x.toInt()],
+                            chartController.missingDates[spot.x.toInt()]
+                                ? chartController.suhuAvgData[chartController
+                                    .dailyAverages.indexWhere(
+                                      (avg) => avg.date.day ==
+                                          dateRange[spot.x.toInt()].day,
+                                    )]
+                                : '0.0',
                           ).toStringAsFixed(1)
                           : type == 'ph'
                           ? double.parse(
-                            chartController.phAvgData[spot.x.toInt()],
+                            chartController.missingDates[spot.x.toInt()]
+                                ? chartController.phAvgData[chartController
+                                    .dailyAverages
+                                    .indexWhere(
+                                      (avg) =>
+                                          avg.date.day ==
+                                          dateRange[spot.x.toInt()].day,
+                                    )]
+                                : '0.0',
                           ).toStringAsFixed(1)
                           : type == 'tds'
                           ? double.parse(
-                            chartController.tdsAvgData[spot.x.toInt()],
+                            chartController.missingDates[spot.x.toInt()]
+                                ? chartController.tdsAvgData[chartController
+                                    .dailyAverages
+                                    .indexWhere(
+                                      (avg) =>
+                                          avg.date.day ==
+                                          dateRange[spot.x.toInt()].day,
+                                    )]
+                                : '0.0',
                           ).toStringAsFixed(1)
                           : double.parse(
-                            chartController.kelembapanAvgData[spot.x.toInt()],
+                            chartController.missingDates[spot.x.toInt()]
+                                ? chartController.kelembapanAvgData[chartController
+                                    .dailyAverages
+                                    .indexWhere(
+                                      (avg) =>
+                                          avg.date.day ==
+                                          dateRange[spot.x.toInt()].day,
+                                    )]
+                                : '0.0',
                           ).toStringAsFixed(1)
                       : '0.0';
               return LineTooltipItem(
