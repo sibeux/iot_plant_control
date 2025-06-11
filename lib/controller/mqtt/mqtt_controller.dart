@@ -4,7 +4,9 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:iot_plant_control/components/colorize_terminal.dart';
 import 'package:iot_plant_control/components/toast.dart';
+import 'package:iot_plant_control/controller/chart_controller.dart';
 import 'package:iot_plant_control/controller/refill_tandon_controller.dart';
+import 'package:iot_plant_control/models/daily_second_sensor.dart';
 import 'package:iot_plant_control/widgets/water_widget/watering_notification.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
@@ -22,6 +24,7 @@ class MqttController extends GetxController {
   void onInit() {
     super.onInit();
     connectToBroker();
+    Get.put(ChartController());
   }
 
   Future<void> connectToBroker() async {
@@ -90,6 +93,18 @@ class MqttController extends GetxController {
           tdsValue.value = (jsonData['tds'] ?? 0).toDouble().round();
           kelembabanValue.value = double.parse(
             (jsonData['kelembapan'] ?? 0).toDouble().toStringAsFixed(0),
+          );
+
+          final chartController = Get.find<ChartController>();
+          chartController.dailySecondSensors.add(
+            DailySecondSensor(
+              id: 'sensor_${DateTime.now().millisecondsSinceEpoch}',
+              timestamp: DateTime.now(),
+              tds: tdsValue.value.toDouble(),
+              kelembaban: kelembabanValue.value,
+              suhu: temperatureValue.value,
+              ph: phValue.value,
+            ),
           );
         } catch (e) {
           logError('⚠️ Error parsing payload: $e');
