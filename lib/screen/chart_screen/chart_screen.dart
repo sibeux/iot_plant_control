@@ -32,12 +32,50 @@ class ChartScreen extends StatelessWidget {
           children: [
             Divider(height: 0.4.h, thickness: 0.4.h),
             Obx(
-              () => Switch(
-                value: chartController.selectedChart.value == 'daily',
-                onChanged: (value) {
-                  chartController.selectedChart.value =
-                      value ? 'daily' : 'weekly';
-                },
+              () => Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Weekly',
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight:
+                          chartController.selectedChart.value == 'weekly'
+                              ? FontWeight.w600
+                              : FontWeight.w600,
+                      color:
+                          chartController.selectedChart.value == 'weekly'
+                              ? Color.fromARGB(255, 69, 214, 149)
+                              : Colors.black.withAlpha(150),
+                    ),
+                  ),
+                  SizedBox(width: 10.w),
+                  Switch(
+                    value: chartController.selectedChart.value == 'daily',
+                    activeColor: Color.fromARGB(255, 69, 214, 149),
+                    inactiveTrackColor: Colors.cyan[100],
+                    onChanged: (value) {
+                      chartController.selectedChart.value =
+                          value ? 'daily' : 'weekly';
+                    },
+                  ),
+                  SizedBox(width: 10.w),
+                  Text(
+                    'Daily',
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight:
+                          chartController.selectedChart.value == 'daily'
+                              ? FontWeight.w600
+                              : FontWeight.w600,
+                      color:
+                          chartController.selectedChart.value == 'daily'
+                              ? Color.fromARGB(255, 69, 214, 149)
+                              : Colors.black.withAlpha(150),
+                    ),
+                  ),
+                ],
               ),
             ),
             Obx(

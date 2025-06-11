@@ -105,7 +105,7 @@ class _WeeklyChartSensorState extends State<WeeklyChartSensor> {
       child: Text(
         textContent,
         style: TextStyle(
-          color: index == 6 ? HexColor('#11a7df') : Colors.black,
+          color: index == 6 ? Color.fromARGB(255, 69, 214, 149) : Colors.black,
           fontWeight: index == 6 ? FontWeight.bold : FontWeight.normal,
           fontSize: 12.sp,
         ),
