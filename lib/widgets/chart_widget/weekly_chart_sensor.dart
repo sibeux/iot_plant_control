@@ -7,11 +7,11 @@ import 'package:intl/intl.dart';
 import 'package:iot_plant_control/controller/chart_controller.dart';
 import 'package:iot_plant_control/widgets/chart_widget/chart_resources.dart';
 
-class ChartSensor extends StatefulWidget {
-  const ChartSensor({super.key});
+class WeeklyChartSensor extends StatefulWidget {
+  const WeeklyChartSensor({super.key});
 
   @override
-  State<ChartSensor> createState() => _ChartSensorState();
+  State<WeeklyChartSensor> createState() => _WeeklyChartSensorState();
 }
 
 // Definisikan di luar fungsi agar tidak dibuat ulang setiap kali build
@@ -30,7 +30,7 @@ List<String> _days =
     dateRange.map((date) => DateFormat('E', 'id').format(date)).toList();
 // dateRange.map((date) => DateFormat('E').format(date)).toList();
 
-class _ChartSensorState extends State<ChartSensor> {
+class _WeeklyChartSensorState extends State<WeeklyChartSensor> {
   final chartController = Get.find<ChartController>();
 
   List<Color> tempGradientColors = [HexColor('#11dfa7'), HexColor('#11a7df')];
@@ -49,7 +49,7 @@ class _ChartSensorState extends State<ChartSensor> {
       children: <Widget>[
         Container(
           height: MediaQuery.of(context).size.height * 0.7,
-          margin: EdgeInsets.symmetric(horizontal: 35.0.w),
+          margin: EdgeInsets.only(left: 35.0.w, right: 35.0.w),
           child: Obx(
             () => Stack(
               children: [
@@ -162,8 +162,10 @@ class _ChartSensorState extends State<ChartSensor> {
                           ? double.parse(
                             chartController.missingDates[spot.x.toInt()]
                                 ? chartController.suhuAvgData[chartController
-                                    .dailyAverages.indexWhere(
-                                      (avg) => avg.date.day ==
+                                    .dailyAverages
+                                    .indexWhere(
+                                      (avg) =>
+                                          avg.date.day ==
                                           dateRange[spot.x.toInt()].day,
                                     )]
                                 : '0.0',
@@ -194,7 +196,8 @@ class _ChartSensorState extends State<ChartSensor> {
                           ).toStringAsFixed(1)
                           : double.parse(
                             chartController.missingDates[spot.x.toInt()]
-                                ? chartController.kelembapanAvgData[chartController
+                                ? chartController
+                                    .kelembapanAvgData[chartController
                                     .dailyAverages
                                     .indexWhere(
                                       (avg) =>
@@ -227,6 +230,7 @@ class _ChartSensorState extends State<ChartSensor> {
         rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
         topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
         bottomTitles: AxisTitles(
+          axisNameWidget: Text('Date'),
           sideTitles: SideTitles(
             showTitles: true,
             reservedSize: 30.sp,

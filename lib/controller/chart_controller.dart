@@ -3,11 +3,15 @@ import 'package:get/get.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:iot_plant_control/components/colorize_terminal.dart';
+import 'package:iot_plant_control/models/daily_second_sensor.dart';
 import 'package:iot_plant_control/models/sensor_daily_avg.dart';
 
 class ChartController extends GetxController {
   var isLoadingFetching = false.obs;
   RxList<SensorDailyAvg> dailyAverages = <SensorDailyAvg>[].obs;
+  RxList<DailySecondSensor> dailySecondSensors = <DailySecondSensor>[].obs;
+
+  RxString selectedChart = 'daily'.obs;
 
   RxList<String> suhuAvgData = <String>[].obs;
   RxList<String> phAvgData = <String>[].obs;
@@ -49,6 +53,7 @@ class ChartController extends GetxController {
   void onInit() {
     super.onInit();
     fetchDailyAverages();
+    getSecondlyData();
   }
 
   Future<void> fetchDailyAverages() async {
@@ -67,7 +72,7 @@ class ChartController extends GetxController {
       }
       dailyAverages.value =
           jsonList.map((json) => SensorDailyAvg.fromJson(json)).toList();
-      logSuccess('$jsonList daily averages loaded');
+      logSuccess('Daily averages loaded');
 
       suhuAvgData.value =
           dailyAverages.map((avg) => avg.avgSuhu.toString()).toList();
@@ -170,6 +175,38 @@ class ChartController extends GetxController {
       isLoadingFetching.value = false;
     } else {
       throw Exception('Failed to load daily averages');
+    }
+  }
+
+  Future<void> getSecondlyData() async {
+    isLoadingFetching.value = true;
+
+    try {
+      final url =
+          'https://sibeux.my.id/project/mqtt-myplant-schedule/api/get_secondly_data';
+
+      final response = await GetConnect().get(url);
+
+      if (response.status.hasError) {
+        throw Exception('Failed to load secondly data');
+      }
+
+      final List<dynamic> jsonData = json.decode(response.bodyString!);
+      if (jsonData.isEmpty) {
+        logError('No secondly data found');
+        isLoadingFetching.value = false;
+        return;
+      }
+
+      dailySecondSensors.value = jsonData.map((json) => DailySecondSensor.fromJson(json)).toList();
+
+      logSuccess('Secondly data loaded successfully');
+    } catch (e) {
+      logError('Error fetching secondly data: $e');
+      isLoadingFetching.value = false;
+      return;
+    } finally {
+      isLoadingFetching.value = false;
     }
   }
 
