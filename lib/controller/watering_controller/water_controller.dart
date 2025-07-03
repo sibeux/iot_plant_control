@@ -146,8 +146,9 @@ class WaterController extends GetxController {
   Future<void> sendWateringSchedule(List<String> data) async {
     // Dokumentasi pake cron railway
     // https://chatgpt.com/c/68405559-6ac0-8002-bfd2-0c249b5d824d
+    // Cek email mana yang dipake untuk cron job
     final url = Uri.parse(
-      'https://mqtt-myplant-schedule-production.up.railway.app/schedule',
+      'https://manselv-mqtt-myplant-schedule-production.up.railway.app/schedule',
     );
 
     logInfo('Payload: $data');
