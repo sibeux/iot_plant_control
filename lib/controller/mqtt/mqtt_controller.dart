@@ -13,7 +13,7 @@ import 'package:mqtt_client/mqtt_server_client.dart';
 
 class MqttController extends GetxController {
   late MqttServerClient client;
-  final topic = 'myplant/data';
+  final topic = 'sensor/data';
   var phValue = 0.0.obs;
   var temperatureValue = 0.0.obs;
   var tdsValue = 0.obs;
@@ -28,13 +28,23 @@ class MqttController extends GetxController {
   }
 
   Future<void> connectToBroker() async {
-    client = MqttServerClient(
-      // '0ec5706baec94b42b8a69d4a86aaa482.s1.eu.hivemq.cloud',
-      'broker.emqx.io',
+    // client = MqttServerClient(
+    //   // '0ec5706baec94b42b8a69d4a86aaa482.s1.eu.hivemq.cloud',
+    //   'broker.emqx.io',
+    //   'flutter_client_${DateTime.now().millisecondsSinceEpoch}',
+    // );
+    //* Khusus untuk broker pribadi (Start)
+    client = MqttServerClient.withPort(
+      'wss://mqtt.myplant.site',
       'flutter_client_${DateTime.now().millisecondsSinceEpoch}',
+      443, // ✅ WSS port
     );
+    client.websocketProtocols = ['mqtt'];
+    client.useWebSocket = true;
+    client.setProtocolV311(); // atau V3.1.1 tergantung server
+    //* Khusus untuk broker pribadi (End)
     // client.port = 8883;
-    client.port = 1883;
+    // client.port = 1883;
     client.keepAlivePeriod = 20;
     client.logging(on: false);
     client.onConnected = onConnected;
@@ -76,7 +86,7 @@ class MqttController extends GetxController {
       if (payload.contains('suhu') &&
           payload.contains('tds') &&
           payload.contains('ph') &&
-          payload.contains('kelembapan')) {
+          payload.contains('kelembaban')) {
         logInfo('📥 Received on $topic: $payload From Sensor!');
 
         // {"suhu":27.00,"tds":0.00,"ph":11.55}
@@ -92,7 +102,7 @@ class MqttController extends GetxController {
           );
           tdsValue.value = (jsonData['tds'] ?? 0).toDouble().round();
           kelembabanValue.value = double.parse(
-            (jsonData['kelembapan'] ?? 0).toDouble().toStringAsFixed(0),
+            (jsonData['kelembaban'] ?? 0).toDouble().toStringAsFixed(0),
           );
 
           final chartController = Get.find<ChartController>();
