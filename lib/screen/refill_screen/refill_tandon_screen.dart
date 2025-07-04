@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:iot_plant_control/controller/mqtt/mqtt_controller.dart';
 import 'package:iot_plant_control/controller/refill_tandon_controller.dart';
+import 'package:iot_plant_control/controller/watering_controller/permission_controller.dart';
 
 class RefillTandonScreen extends StatelessWidget {
   const RefillTandonScreen({super.key});
@@ -12,6 +13,7 @@ class RefillTandonScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final refillTandonController = Get.find<RefillTandonController>();
+    final permissionController = Get.find<PermissionController>();
     final mqttController = Get.find<MqttController>();
     return Scaffold(
       backgroundColor: Color(0xffffffff),
@@ -73,56 +75,61 @@ class RefillTandonScreen extends StatelessWidget {
             ),
             SizedBox(height: 40.h),
             Obx(
-              () => SizedBox(
-                width: 300.w,
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (refillTandonController.isServiceRunning.value) {
-                      refillTandonController.toggleService(
-                        false,
-                        isFromButton: true,
-                      );
-                      mqttController.publishToBroker('stoppengisiantandonair');
-                    } else {
-                      refillTandonController.toggleService(true);
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor:
-                        !refillTandonController.isServiceRunning.value
-                            ? Color.fromARGB(255, 69, 214, 149)
-                            : HexColor('#e95263'),
-                    elevation: 0, // Menghilangkan shadow
-                    splashFactory: InkRipple.splashFactory,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.r),
+              () => AbsorbPointer(
+                absorbing: !permissionController.isNotificationGranted.value,
+                child: SizedBox(
+                  width: 300.w,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (refillTandonController.isServiceRunning.value) {
+                        refillTandonController.toggleService(
+                          false,
+                          isFromButton: true,
+                        );
+                        mqttController.publishToBroker('stoppengisiantandonair');
+                      } else {
+                        refillTandonController.toggleService(true);
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor:
+                          !permissionController.isNotificationGranted.value
+                              ? Colors.grey
+                              : !refillTandonController.isServiceRunning.value
+                              ? Color.fromARGB(255, 69, 214, 149)
+                              : HexColor('#e95263'),
+                      elevation: 0, // Menghilangkan shadow
+                      splashFactory: InkRipple.splashFactory,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
                     ),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 10.0.w,
-                      vertical: 10.0.h,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10.0.w,
+                        vertical: 10.0.h,
+                      ),
+                      child:
+                          refillTandonController.isLoading.value
+                              ? SizedBox(
+                                width: 20.w,
+                                height: 20.h,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2.0.w,
+                                ),
+                              )
+                              : Text(
+                                !refillTandonController.isServiceRunning.value
+                                    ? 'Start'
+                                    : 'Stop',
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                     ),
-                    child:
-                        refillTandonController.isLoading.value
-                            ? SizedBox(
-                              width: 20.w,
-                              height: 20.h,
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 2.0.w,
-                              ),
-                            )
-                            : Text(
-                              !refillTandonController.isServiceRunning.value
-                                  ? 'Start'
-                                  : 'Stop',
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
                   ),
                 ),
               ),

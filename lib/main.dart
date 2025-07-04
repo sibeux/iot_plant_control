@@ -26,7 +26,7 @@ void main() async {
   await AndroidAlarmManager.initialize();
 
   final permissionController = Get.put(PermissionController());
-  // await permissionController.requestExactAlarmPermission();
+  await permissionController.requestExactAlarmPermission();
   // Khusus di Android 13+.
   await permissionController.requestNotificationPermissionIfNeeded();
   // RefillTandonCotroller & WaterController dipanggil di sini,
