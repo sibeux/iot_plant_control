@@ -25,17 +25,19 @@ void main() async {
   
   await AndroidAlarmManager.initialize();
 
+  final permissionController = Get.put(PermissionController());
+  // await permissionController.requestExactAlarmPermission();
+  // Khusus di Android 13+.
+  await permissionController.requestNotificationPermissionIfNeeded();
   // RefillTandonCotroller & WaterController dipanggil di sini,
   // karena di persistentbar harus dipanggil saat buka screen masing-masing.
   Get.put(MqttController());
   Get.put(RefillTandonController());
   Get.put(WaterController());
-  final permissionController = Get.put(PermissionController());
 
   // await initServiceExample();
   await initRefillService();
   await GetStorage.init();
-  await permissionController.requestExactAlarmPermission();
 
   // For alarm manager.
   // Register the UI isolate's SendPort to allow for communication from the
