@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:ui';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -14,7 +16,24 @@ const notificationChannelId = 'my_foreground';
 // this will be used for notification id, So you can update your custom notification with this id.
 const notificationId = 888;
 
+// Khusus di Android 13+
+Future<void> requestNotificationPermissionIfNeeded() async {
+  if (Platform.isAndroid) {
+    final androidInfo = await DeviceInfoPlugin().androidInfo;
+    if (androidInfo.version.sdkInt >= 33) {
+      final plugin =
+          FlutterLocalNotificationsPlugin()
+              .resolvePlatformSpecificImplementation<
+                AndroidFlutterLocalNotificationsPlugin
+              >();
+      await plugin?.requestNotificationsPermission();
+    }
+  }
+}
+
 Future<void> initRefillService() async {
+  // Khusus di Android 13+
+  await requestNotificationPermissionIfNeeded();
   final service = FlutterBackgroundService();
   final notificationPlugin = FlutterLocalNotificationsPlugin();
 
