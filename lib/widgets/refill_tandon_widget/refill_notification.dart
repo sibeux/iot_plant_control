@@ -5,9 +5,9 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 Future<void> showPengisianTandonNotification() async {
   AndroidNotificationDetails
   refillProgressNotification = AndroidNotificationDetails(
-    'pengisian_tandon_air',
-    'Notifikasi Tandon Air',
-    channelDescription: 'Channel untuk notifikasi pengisian tandon air',
+    'penyiraman_manual_channel',
+    'Notifikasi Siram Manual',
+    channelDescription: 'Channel untuk notifikasi penyiraman manual',
     importance: Importance.max,
     priority: Priority.high,
     // ongoing: true, // Notifikasi tidak bisa dihapus.
@@ -17,12 +17,12 @@ Future<void> showPengisianTandonNotification() async {
     icon: '@mipmap/sihalal_icon',
     largeIcon: DrawableResourceAndroidBitmap('@mipmap/sihalal_icon'),
     styleInformation: BigTextStyleInformation(
-      'Tandon air Anda sedang dalam proses pengisian. Proses telah dimulai dan akan '
-      'berlanjut hingga tandon terisi penuh. Anda akan diberi tahu ketika pengisian selesai.',
+      'Tanaman Anda sedang dalam proses penyiraman. Proses telah dimulai dan akan '
+      'berlanjut hingga penyiraman dihentikan.',
       htmlFormatBigText: true,
-      contentTitle: 'Pengisian Tandon Air',
+      contentTitle: 'Penyiraman Manual',
       htmlFormatContentTitle: true,
-      summaryText: 'Pengisian sedang berlangsung',
+      summaryText: 'Penyiraman manual sedang berlangsung',
       htmlFormatSummaryText: true,
     ),
     actions: <AndroidNotificationAction>[
@@ -42,8 +42,8 @@ Future<void> showPengisianTandonNotification() async {
 
   await FlutterLocalNotificationsPlugin().show(
     169,
-    'Pengisian Tandon Air',
-    'Pengisian tandon air sedang berlangsung',
+    'Penyiraman Manual',
+    'Penyiraman manual sedang berlangsung',
     notificationDetails,
   );
 }
