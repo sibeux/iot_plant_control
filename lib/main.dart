@@ -1,5 +1,4 @@
 import 'dart:isolate';
-import 'dart:ui';
 
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/material.dart';
@@ -7,11 +6,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:iot_plant_control/controller/jwt_controller.dart';
 import 'package:iot_plant_control/controller/mqtt/mqtt_controller.dart';
 import 'package:iot_plant_control/controller/refill_tandon_controller.dart';
 import 'package:iot_plant_control/controller/watering_controller/permission_controller.dart';
 import 'package:iot_plant_control/controller/watering_controller/water_controller.dart';
-import 'package:iot_plant_control/screen/splash_screen.dart';
+import 'package:iot_plant_control/screen/splash_screen/splash_handler.dart';
 // import 'package:iot_plant_control/services/example_background_service.dart';
 import 'package:iot_plant_control/services/refill_service.dart';
 import 'package:get_storage/get_storage.dart';
@@ -22,7 +22,7 @@ const String isolateName = 'water_alarm_port';
 void main() async {
   // Dibutuhkan setpreferredOrientations.
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   await AndroidAlarmManager.initialize();
 
   final permissionController = Get.put(PermissionController());
@@ -38,22 +38,6 @@ void main() async {
   // await initServiceExample();
   await initRefillService();
   await GetStorage.init();
-
-  // For alarm manager.
-  // Register the UI isolate's SendPort to allow for communication from the
-  // background isolate.
-  IsolateNameServer.registerPortWithName(port.sendPort, isolateName);
-
-  port.listen((message) {
-    if (message is String) {
-      Get.find<WaterController>().isWaterOn.value = true;
-      Get.find<WaterController>().timeNotifier.value = message.toString();
-      if (message == 'done'){
-        Get.find<WaterController>().isWaterOn.value = false;
-      }
-    } 
-  });
-  // Sampai Sini.
 
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(
@@ -77,6 +61,18 @@ void main() async {
   });
 }
 
+class HomeBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut<JwtController>(() => JwtController(), fenix: true);
+    // Get.lazyPut<UserProfileController>(
+    //   () => UserProfileController(),
+    //   fenix: true,
+    // );
+    // Get.put(UserProfileController(), permanent: true);
+  }
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -94,7 +90,10 @@ class MyApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             fontFamily: 'DmSans',
           ),
-          home: SplashScreen(),
+          showPerformanceOverlay: false,
+          initialRoute: '/',
+          initialBinding: HomeBinding(),
+          getPages: [GetPage(name: '/', page: () => SplashHandler())],
         );
       },
     );
