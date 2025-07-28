@@ -1,5 +1,3 @@
-import 'dart:isolate';
-
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,9 +13,6 @@ import 'package:iot_plant_control/screen/splash_screen/splash_handler.dart';
 // import 'package:iot_plant_control/services/example_background_service.dart';
 import 'package:iot_plant_control/services/refill_service.dart';
 import 'package:get_storage/get_storage.dart';
-
-final ReceivePort port = ReceivePort();
-const String isolateName = 'water_alarm_port';
 
 void main() async {
   // Dibutuhkan setpreferredOrientations.
