@@ -55,8 +55,8 @@ Future<void> initRefillService() async {
       autoStart: false,
       isForegroundMode: true,
       notificationChannelId: notificationChannelId,
-      initialNotificationTitle: 'Pengisian Tandon Air',
-      initialNotificationContent: 'Pengisian tandon air sedang berlangsung',
+      initialNotificationTitle: 'Penyiraman Manual',
+      initialNotificationContent: 'Penyiraman manual sedang berlangsung',
       foregroundServiceNotificationId: notificationId,
     ),
     iosConfiguration: IosConfiguration(

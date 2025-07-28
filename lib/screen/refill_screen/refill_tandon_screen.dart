@@ -23,7 +23,7 @@ class RefillTandonScreen extends StatelessWidget {
         titleSpacing: 0,
         title: Padding(
           padding: EdgeInsets.only(left: 20.w),
-          child: Text('Refill Tandon'),
+          child: Text('Penyiraman Manual'),
         ),
         titleTextStyle: TextStyle(
           color: Colors.black,
@@ -60,8 +60,8 @@ class RefillTandonScreen extends StatelessWidget {
                 ),
                 child: Text(
                   refillTandonController.isServiceRunning.value
-                      ? 'Pump Status: ACTIVE'
-                      : 'Pump Status: INACTIVE',
+                      ? 'Watering Status: ACTIVE'
+                      : 'Watering Status: INACTIVE',
                   style: TextStyle(
                     fontSize: 18.sp,
                     fontWeight: FontWeight.bold,
