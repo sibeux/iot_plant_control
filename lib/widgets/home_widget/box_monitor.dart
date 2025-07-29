@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:iot_plant_control/components/toast.dart';
 import 'package:iot_plant_control/controller/clock_controller.dart';
 import 'package:iot_plant_control/controller/mqtt/mqtt_controller.dart';
 import 'package:iot_plant_control/widgets/home_widget/box_monitor_blpr.dart';
+import 'package:iot_plant_control/widgets/home_widget/planting_picker/modal_planting.dart';
 import 'package:iot_plant_control/widgets/tds_widget/tds_control_slide.dart';
 
 class BoxMonitor extends StatelessWidget {
@@ -43,25 +45,52 @@ class BoxMonitor extends StatelessWidget {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    height: 40.h,
-                    width: 40.w,
-                    child: SvgPicture.asset(
-                      'assets/img/icon/daun.svg',
-                      width: 100.0.w,
-                      height: 100.0.h,
-                      fit: BoxFit.contain,
+                  InkWell(
+                    onTap: () {
+                      if (clockController.jumlahHari.value != '?') {
+                        plantingModal(context);
+                      } else {
+                        showToast('Tunggu sebentar, data belum siap');
+                      }
+                    },
+                    child: SizedBox(
+                      height: 40.h,
+                      width: 40.w,
+                      child: SvgPicture.asset(
+                        'assets/img/icon/daun.svg',
+                        width: 100.0.w,
+                        height: 100.0.h,
+                        fit: BoxFit.contain,
+                      ),
                     ),
                   ),
                   SizedBox(width: 15.w),
-                  Obx(
-                    () => Text(
-                      '${clockController.timeNotifier.value} WIB',
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black.withAlpha(200),
-                      ),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Obx(
+                            () => Text(
+                              'Hari ke-${clockController.jumlahHari.value}',
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black.withAlpha(200),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Obx(
+                          () => Text(
+                            '${clockController.timeNotifier.value} WIB',
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black.withAlpha(200),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],

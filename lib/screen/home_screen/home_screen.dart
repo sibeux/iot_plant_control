@@ -27,6 +27,7 @@ class HomeScreen extends StatelessWidget {
     final imageSlideController = Get.put(ImageSlideController());
     final clockController = Get.put(ClockController());
     final mqttController = Get.find<MqttController>();
+    clockController.getDatePlanting();
     // Set the locale to Indonesia
     var now = DateTime.now();
     var formatter = DateFormat(
