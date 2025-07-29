@@ -27,7 +27,7 @@ class DatePicker extends StatelessWidget {
           textStyle: TextStyle(fontSize: 14.sp, color: Colors.black),
         ),
         onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
-          // Handle selection changes if needed
+          // Handle selection changes if needed.
           // print('Selected range: ${args.value}');
         },
         onSubmit: (p0) {
