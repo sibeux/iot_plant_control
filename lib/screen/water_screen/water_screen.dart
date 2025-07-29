@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:iot_plant_control/controller/watering_controller/permission_controller.dart';
 import 'package:iot_plant_control/controller/watering_controller/water_controller.dart';
 import 'package:iot_plant_control/screen/water_screen/add_water_screen.dart';
+import 'package:iot_plant_control/screen/water_screen/history_water_screen/history_water_screen.dart';
 import 'package:iot_plant_control/widgets/water_widget/water_listtile.dart';
 
 class WaterScreen extends StatelessWidget {
@@ -28,6 +29,26 @@ class WaterScreen extends StatelessWidget {
           fontSize: 18.sp,
           fontWeight: FontWeight.w500,
         ),
+        actionsPadding: EdgeInsets.only(right: 10.w),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Get.to(
+                () => HistoryWaterScreen(),
+                transition: Transition.downToUp,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+                fullscreenDialog: true,
+                popGesture: false,
+              );
+            },
+            icon: Icon(
+              Icons.library_books_outlined,
+              size: 24.sp,
+              color: Colors.black,
+            ),
+          ),
+        ],
       ),
       body: Column(
         children: [
