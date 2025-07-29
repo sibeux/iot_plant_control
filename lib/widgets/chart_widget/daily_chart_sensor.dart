@@ -81,7 +81,10 @@ class DailyChartSensor extends StatelessWidget {
                     majorTickLines: const MajorTickLines(size: 0),
                     // Suggest a number of intervals to create. This helps the axis
                     // respect the 'maximum' value more strictly.
-                    logBase: 7,
+                    maximum: 2000,
+                    interval: 1,
+                    // logBase itu untuk logaritmic.
+                    logBase: 2,
                   ),
                   series: [
                     lineSeriesChart(

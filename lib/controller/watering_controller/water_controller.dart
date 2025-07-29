@@ -143,13 +143,45 @@ class WaterController extends GetxController {
     update();
   }
 
+  Future<String> getRailwayUrl() async {
+    const url =
+        "https://sibeux.my.id/project/myplant-php-jwt/api/railway_url?method=get_railway_url";
+
+    try {
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode != 200 || response.body.isEmpty) {
+        logError('Failed to fetch railway url: HTTP ${response.statusCode}');
+        return '';
+      }
+
+      final Map<String, dynamic> data = jsonDecode(response.body);
+
+      if (data['status'] != 'success') {
+        logError('API returned non-success status: ${data['status']}');
+        return '';
+      }
+
+      final railwayUrl = data['data']?['url'];
+      if (railwayUrl == null || railwayUrl.isEmpty) {
+        logError('No railway url returned in data.');
+        return '';
+      }
+
+      logSuccess('Railway URL fetched successfully: ${data['data']?['url']}');
+      return railwayUrl ?? '';
+    } catch (e, stack) {
+      logError('Exception during date fetch: $e\n$stack');
+      return '';
+    }
+  }
+
   Future<void> sendWateringSchedule(List<String> data) async {
     // Dokumentasi pake cron railway
     // https://chatgpt.com/c/68405559-6ac0-8002-bfd2-0c249b5d824d
     // Cek email mana yang dipake untuk cron job
-    final url = Uri.parse(
-      'https://manselv-mqtt-myplant-schedule-production.up.railway.app/schedule',
-    );
+    final railwayUrl = await getRailwayUrl();
+    final url = Uri.parse(railwayUrl);
 
     logInfo('Payload: $data');
 
